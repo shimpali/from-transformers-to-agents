@@ -1,10 +1,9 @@
 # How Transformer LLMs Work -- all code from the article, concatenated
-# Article 1 of the "From Transformers to Agents" series
-# https://github.com/<your-username>/from-transformers-to-agents/tree/main/1-how-transformer-llms-work
+# https://github.com/shimpali/from-transformers-to-agents/tree/main/article-01-how-transformer-llms-work
 
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
 # 1. Tokenization
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
 # See how a real tokenizer splits a sentence into pieces + IDs
 # pip install transformers
 from transformers import AutoTokenizer
@@ -15,9 +14,9 @@ text = "My overjoyed squirrel stole peanuts."
 for token_id in tokenizer(text)["input_ids"]:
     print(f"{token_id:>6}  ->  {tokenizer.decode([token_id])!r}")
 
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
 # 2. Embeddings
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
 # Cosine similarity between two words' embedding vectors
 # pip install transformers torch
 import torch
@@ -34,9 +33,9 @@ for a, b in [("coffee", "espresso"), ("coffee", "guitar")]:
     sim = torch.cosine_similarity(vector_for(a), vector_for(b), dim=0)
     print(f"similarity({a!r}, {b!r}) = {sim.item():.3f}")
 
-# ---------------------------------------------------------------
-# 3. Self-attention
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
+# 3. Self attention
+# -----------------------------------------------------------------
 # Self-attention from scratch on toy vectors -- numpy only,
 # so the two steps stay visible instead of hiding in a framework call.
 import numpy as np
@@ -59,9 +58,9 @@ context_vector = weights @ values                 # step 2: combine information
 for token, weight in zip(tokens, weights):
     print(f"{token:>6}: {weight:.2%} relevant to 'dog'")
 
-# ---------------------------------------------------------------
-# 4. The generation loop
-# ---------------------------------------------------------------
+# -----------------------------------------------------------------
+# 4. Generation loop
+# -----------------------------------------------------------------
 # The autoregressive loop underneath every chat response, made explicit
 # pip install transformers torch
 from transformers import AutoModelForCausalLM, AutoTokenizer

@@ -4,8 +4,9 @@ main.py -- turn this repo's article folders into Medium-ready material.
 
 Two jobs, one script:
 
-  1. --sync-gists : create/update each article's GitHub Gist via the GitHub
-     API, built by concatenating that article's scripts/*.py. GitHub's Gist
+  1. --sync-gists : create/update a GitHub Gist for every scripts/*.py file,
+     one Gist per snippet (not one combined Gist per article) so each can be
+     embedded on its own, wherever the README references it. GitHub's Gist
      API is alive and well documented (unlike Medium's, which stopped
      issuing new integration tokens -- see the "Medium" note below).
   2. (default)     : convert each article's README.md into Medium-paste-ready
@@ -13,7 +14,7 @@ Two jobs, one script:
      flattened, GitHub-only sections cut.
 
 Run both in one go -- sync first, then convert, so the Medium HTML always
-carries that run's fresh Gist URL:
+carries that run's fresh Gist URLs:
 
     python3 main.py --sync-gists
     python3 main.py article-01-how-transformer-llms-work --sync-gists
@@ -53,15 +54,17 @@ What the Medium conversion does to each article's README.md:
                                            (the browser loads these straight off disk when you
                                            open the file -- no need to push anything to GitHub
                                            first; Medium gets the actual pixels via copy/paste)
-       scripts/*.py, once that article's gist is published -> the gist's url
+       scripts/<name>.py, once THAT script's own gist is published
+                                        -> that snippet's own gist URL
        everything else (../README.md, unpublished scripts/, gist/, ...)
                                         -> github.com/<repo>/blob-or-tree/<branch>/...
-  4. If the article's gist is published, adds a "Full code for this article:
-     <bare gist URL>" line right before Sources. Medium turns a bare URL
-     pasted on its own empty line into a live Gist embed -- that auto-embed
-     only fires on a direct paste into an empty line, not partway through a
-     bulk paste, so after pasting the article, select that line, delete it,
-     and paste the same URL again by itself to trigger the embed.
+  4. Right after any line that links to a published snippet's gist, inserts
+     a new paragraph with that gist's bare URL by itself. Medium turns a
+     bare URL pasted on its own empty line into a live Gist embed -- that
+     auto-embed only fires on a direct paste into an empty line, not
+     partway through a bulk paste, so after pasting the article, find that
+     bare-URL line, select it, delete it, and paste the same URL again by
+     itself to trigger the embed, right where that snippet belongs.
   5. Flattens any remaining markdown tables into bullet lists, since Medium
      doesn't support real tables.
   6. Renders to HTML with the `markdown` library (fenced_code, sane_lists).
@@ -73,7 +76,7 @@ writes into images/ (the generated .png siblings), medium/, and gist/.
 
 Known limitation this script can't fix: Medium's paste-import of code blocks
 is inconsistent (sometimes the gray box survives, sometimes it degrades to
-plain text) -- that's exactly why the one-gist-per-article convention exists.
+plain text) -- that's exactly why each snippet also gets its own Gist.
 
 Requires: pip install markdown requests playwright
           playwright install chromium   (one-time, downloads the browser
@@ -84,8 +87,9 @@ Requires: pip install markdown requests playwright
 SvgToPng       -- SVG -> PNG conversion (headless Chromium).
 GitHubGist     -- thin wrapper around the GitHub Gist API.
 MediumConverter-- stateless markdown/HTML helpers + the shared templates.
-Article        -- one article-NN-slug/ folder: title, gist state, link
-                   resolution, and the convert()/sync_gist() pipelines.
+Article        -- one article-NN-slug/ folder: title, per-script gist
+                   state, link resolution, and the convert()/sync_gists()
+                   pipelines.
 SeriesRepo      -- the whole repo: discovers articles, detects owner/repo,
                    loads .env, and runs sync/convert across every article.
 main()          -- CLI entry point, wires the above together.
@@ -144,21 +148,46 @@ class SvgToPng:
         return 1600.0, 900.0
 
     @classmethod
-    def render(cls, svg_path: Path, png_path: Path, target_width: int = 1600) -> None:
+    def render(cls, svg_path: Path, png_path: Path, target_width: int = 1600, padding: float = 16) -> None:
         """Render one SVG to PNG via headless Chromium (pixel-faithful -- a
         real browser painting the real SVG -- unlike lighter SVG->raster
-        libraries, which can miss markers/arrowheads and other features)."""
+        libraries, which can miss markers/arrowheads and other features).
+
+        Crops to the diagram's actual drawn content (the SVG's own
+        getBBox()), not the full viewBox -- some of these diagrams have a
+        viewBox taller than what's actually drawn in it (room left for a
+        title that isn't there, say), which would otherwise show up as a
+        big blank margin in the PNG. Falls back to the full viewBox if
+        bbox measurement fails for any reason."""
         w, h = cls.dimensions(svg_path)
-        scale = max(target_width / w, 1.0)
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
+                clip = {"x": 0, "y": 0, "width": w, "height": h}
+                try:
+                    measure_page = browser.new_page(viewport={"width": int(w), "height": int(h)})
+                    measure_page.goto(svg_path.resolve().as_uri())
+                    bbox = measure_page.evaluate(
+                        "() => { const b = document.querySelector('svg').getBBox(); "
+                        "return {x: b.x, y: b.y, width: b.width, height: b.height}; }"
+                    )
+                    measure_page.close()
+                    if bbox["width"] > 0 and bbox["height"] > 0:
+                        bx = max(bbox["x"] - padding, 0)
+                        by = max(bbox["y"] - padding, 0)
+                        bw = min(bbox["width"] + 2 * padding, w - bx)
+                        bh = min(bbox["height"] + 2 * padding, h - by)
+                        clip = {"x": bx, "y": by, "width": bw, "height": bh}
+                except Exception:
+                    pass  # fall back to the full viewBox
+
+                scale = max(target_width / clip["width"], 1.0)
                 page = browser.new_page(
                     viewport={"width": int(w), "height": int(h)},
                     device_scale_factor=scale,
                 )
                 page.goto(svg_path.resolve().as_uri())
-                page.screenshot(path=str(png_path), clip={"x": 0, "y": 0, "width": w, "height": h})
+                page.screenshot(path=str(png_path), clip=clip)
                 page.close()
             finally:
                 browser.close()
@@ -199,7 +228,8 @@ class SvgToPng:
 
 class GitHubGist:
     """Thin wrapper around the GitHub Gist API, authenticated with one
-    token. One instance is shared across every article's sync."""
+    token. One instance is shared across every article's sync, and one
+    Gist is created/updated per script file (not one per article)."""
 
     API = "https://api.github.com"
 
@@ -242,8 +272,9 @@ class GitHubGist:
 
 class MediumConverter:
     """Stateless helpers that turn README markdown into Medium-paste-ready
-    HTML: cutting GitHub-only sections, flattening tables, and rendering.
-    Link rewriting needs per-article context, so that lives on Article."""
+    HTML: cutting GitHub-only sections, flattening tables, inserting bare
+    Gist-embed lines, and rendering. Link rewriting needs per-article
+    context, so that lives on Article."""
 
     CUT_MARKER = "<!-- medium:cut -->"
     IMAGE_EXTS = {".svg", ".png", ".jpg", ".jpeg", ".gif", ".webp"}
@@ -255,6 +286,12 @@ class MediumConverter:
         r"(?P<body>(?:^\|.*\|[ \t]*\n?)+)",
         re.MULTILINE,
     )
+    # Matches a markdown line that links straight to a published Gist, e.g.
+    #   Full script: [`01_tokenization.py`](https://gist.github.com/user/abc123)
+    GIST_LINK_LINE_RE = re.compile(
+        r"^(?P<line>.*\[[^\]]*\]\((?P<url>https://gist\.github\.com/[^)\s]+)\).*)$",
+        re.MULTILINE,
+    )
 
     HTML_TEMPLATE = """<!DOCTYPE html>
 <!--
@@ -264,11 +301,12 @@ class MediumConverter:
   (Cmd/Ctrl+C), then paste into a new Medium draft (Cmd/Ctrl+V). Medium's
   editor reads the pasted formatting directly.
 
-  If a "Full code for this article" line appears near the end, Medium's
-  bulk paste will NOT auto-embed it as a live Gist widget -- that only
-  triggers on pasting a bare URL directly into an empty line. So: select
-  that line in the Medium draft, delete it, then paste the same URL again
-  by itself to get the live embed.
+  Each snippet has its own Gist, so a bare Gist URL appears right after
+  every "Full script: [...]" line. Medium's bulk paste will NOT auto-embed
+  those as live Gist widgets -- that only triggers on pasting a bare URL
+  directly into an empty line. So, for each one you want live: select that
+  bare-URL line in the Medium draft, delete it, then paste the same URL
+  again by itself to get the live embed, right where that snippet belongs.
 -->
 <html lang="en">
 <head>
@@ -331,13 +369,16 @@ class MediumConverter:
 
         return cls.process_outside_code(text, lambda t: cls.TABLE_RE.sub(_flatten, t))
 
-    @staticmethod
-    def insert_gist_line(html_body: str, gist_url: str) -> str:
-        para = f"<p>Full code for this article: {gist_url}</p>\n"
-        marker = "<h3>Sources</h3>"
-        if marker in html_body:
-            return html_body.replace(marker, para + marker, 1)
-        return html_body + para
+    @classmethod
+    def insert_gist_embed_lines(cls, text: str) -> str:
+        """Right after any line that links to a published snippet's Gist,
+        add a new paragraph containing just that Gist's bare URL -- ready
+        for the select/delete/re-paste trick that triggers Medium's live
+        embed, positioned exactly where that snippet is referenced."""
+        def _add(m):
+            return f"{m.group('line')}\n\n{m.group('url')}"
+
+        return cls.process_outside_code(text, lambda t: cls.GIST_LINK_LINE_RE.sub(_add, t))
 
     @staticmethod
     def render_html(text: str) -> str:
@@ -353,29 +394,22 @@ class MediumConverter:
 # ============================================================================
 
 class Article:
-    """One article-NN-slug/ folder: its README, scripts, images, Gist, and
-    the Medium HTML generated from it."""
+    """One article-NN-slug/ folder: its README, scripts, images, one Gist
+    per script, and the Medium HTML generated from it."""
 
-    GIST_MD_TEMPLATE = """# Gist for this article
+    GIST_MD_HEADER = """# Gists for this article
 
-**Status: published, kept in sync by `main.py --sync-gists`.**
+**Status: kept in sync by `main.py --sync-gists`.**
 
-One Gist per article (not per snippet), built by concatenating every file in
-`scripts/`, in filename order. To update it after changing code, just run:
+One Gist per script under `scripts/` (not one combined Gist for the whole
+article), so each snippet can be embedded on its own wherever it's
+referenced in the README. To update after changing code, just run:
 
     python3 main.py {slug} --sync-gists
 
-That rebuilds `gist/{filename}` from `scripts/*.py` and pushes it to this
-same Gist (matched by the ID below) -- nothing to copy-paste by hand. The
-Medium conversion then picks up the URL below automatically.
-
-## Gist ID
-
-{gist_id}
-
-## Published URL
-
-{html_url}
+That re-pushes each script's content to its own Gist (matched to the
+entries below by filename) -- nothing to copy-paste by hand. The Medium
+conversion then picks up each URL automatically.
 """
 
     def __init__(self, path: Path, repo_root: Path):
@@ -416,85 +450,104 @@ Medium conversion then picks up the URL below automatically.
                 return m.group(1).strip()
         return self.slug
 
-    # -- gist -----------------------------------------------------------------
+    def script_files(self) -> list[Path]:
+        scripts_dir = self.path / "scripts"
+        return sorted(scripts_dir.glob("*.py")) if scripts_dir.is_dir() else []
 
-    def gist_id(self) -> str | None:
+    @staticmethod
+    def script_label(script: Path) -> str:
+        m = re.match(r"(\d+)_(.+)\.py$", script.name)
+        return f"{int(m.group(1))}. {m.group(2).replace('_', ' ').capitalize()}" if m else script.stem
+
+    # -- per-script gist state (read from gist/GIST.md) ----------------------
+
+    def _gist_section(self, script_name: str) -> str | None:
         if not self.gist_md_path.exists():
             return None
-        m = re.search(r"## Gist ID\s*\n+`?(\S+)`?", self.gist_md_path.read_text(encoding="utf-8"))
+        content = self.gist_md_path.read_text(encoding="utf-8")
+        m = re.search(
+            rf"^## {re.escape(script_name)}\s*\n(.*?)(?=\n## |\Z)",
+            content, re.MULTILINE | re.DOTALL,
+        )
         return m.group(1) if m else None
 
-    def gist_url(self) -> str | None:
-        if not self.gist_md_path.exists():
+    def gist_id_for(self, script_name: str) -> str | None:
+        section = self._gist_section(script_name)
+        if not section:
             return None
-        m = re.search(r"## Published URL\s*\n+`?(.+?)`?\s*(\n|$)", self.gist_md_path.read_text(encoding="utf-8"))
-        if not m:
+        m = re.search(r"Gist ID:\s*`?(\S+?)`?\s*$", section, re.MULTILINE)
+        if not m or m.group(1).startswith("("):
             return None
-        url = m.group(1).strip()
-        return url if url.startswith("http") else None
+        return m.group(1)
+
+    def gist_url_for(self, script_name: str) -> str | None:
+        section = self._gist_section(script_name)
+        if not section:
+            return None
+        m = re.search(r"Published URL:\s*(\S+)", section)
+        if not m or not m.group(1).startswith("http"):
+            return None
+        return m.group(1)
 
     def gist_status(self) -> str:
-        if not self.gist_md_path.exists():
-            return "no gist/GIST.md found"
-        url = self.gist_url()
-        return f"published: {url}" if url else "not yet published (placeholder in GIST.md)"
-
-    def build_gist_source(self, repo: str, branch: str) -> tuple[str, str]:
-        """Concatenate scripts/*.py into one file. Returns (filename,
-        content); content is "" if there's nothing to sync."""
-        scripts_dir = self.path / "scripts"
-        scripts = sorted(scripts_dir.glob("*.py")) if scripts_dir.is_dir() else []
-        filename = f"{self.short_slug.replace('-', '_')}.py"
+        scripts = self.script_files()
         if not scripts:
-            return filename, ""
+            return "no scripts/*.py found"
+        published = sum(1 for s in scripts if self.gist_url_for(s.name))
+        return f"{published}/{len(scripts)} scripts published"
 
+    def build_snippet_source(self, script: Path, repo: str, branch: str) -> str:
         sep = "# " + "-" * 65
         lines = [
-            f"# {self.title} -- all code from the article, concatenated",
-            f"# https://github.com/{repo}/tree/{branch}/{self.slug}",
+            f"# {self.title} -- {self.script_label(script)}",
+            f"# https://github.com/{repo}/blob/{branch}/{self.rel_dir}/scripts/{script.name}",
+            "",
+            script.read_text(encoding="utf-8").rstrip("\n"),
             "",
         ]
-        for script in scripts:
-            m = re.match(r"(\d+)_(.+)\.py$", script.name)
-            label = f"{int(m.group(1))}. {m.group(2).replace('_', ' ').capitalize()}" if m else script.stem
-            lines += [sep, f"# {label}", sep, script.read_text(encoding="utf-8").rstrip("\n"), ""]
-        return filename, "\n".join(lines).rstrip() + "\n"
+        return "\n".join(lines).rstrip() + "\n"
 
-    def write_gist_md(self, filename: str, gist_id: str, html_url: str) -> None:
-        content = self.GIST_MD_TEMPLATE.format(
-            slug=self.slug, filename=filename, gist_id=gist_id, html_url=html_url,
-        )
-        (self.path / "gist" / "GIST.md").write_text(content, encoding="utf-8")
+    def write_gist_md(self, entries: list[tuple[str, str | None, str | None]]) -> None:
+        parts = [self.GIST_MD_HEADER.format(slug=self.slug)]
+        for name, gist_id, url in entries:
+            if gist_id and url:
+                parts.append(f"## {name}\n\n- Gist ID: `{gist_id}`\n- Published URL: {url}\n")
+            else:
+                parts.append(f"## {name}\n\n- Gist ID: (not yet published)\n- Published URL: (not yet published)\n")
+        gist_dir = self.path / "gist"
+        gist_dir.mkdir(exist_ok=True)
+        (gist_dir / "GIST.md").write_text("\n".join(parts), encoding="utf-8")
 
-    def sync_gist(self, client: GitHubGist, repo: str, branch: str) -> None:
-        filename, content = self.build_gist_source(repo, branch)
-        if not content:
+    def sync_gists(self, client: GitHubGist, repo: str, branch: str) -> None:
+        scripts = self.script_files()
+        if not scripts:
             print(f"  {self.slug}: skipped, no scripts/*.py found")
             return
 
-        gist_dir = self.path / "gist"
-        gist_dir.mkdir(exist_ok=True)
-        (gist_dir / filename).write_text(content, encoding="utf-8")
+        entries: list[tuple[str, str | None, str | None]] = []
+        for script in scripts:
+            content = self.build_snippet_source(script, repo, branch)
+            description = f"From Transformers to Agents -- {self.title} -- {self.script_label(script)}"
+            existing_id = self.gist_id_for(script.name)
+            try:
+                if existing_id:
+                    data = client.update(existing_id, description, script.name, content)
+                    action = "updated"
+                else:
+                    data = client.create(description, script.name, content)
+                    action = "created"
+            except requests.exceptions.RequestException as e:
+                print(f"  {self.slug}: {script.name} FAILED -- {e}")
+                entries.append((script.name, existing_id, self.gist_url_for(script.name)))
+                continue
+            entries.append((script.name, data["id"], data["html_url"]))
+            print(f"  {self.slug}: {script.name} {action} -> {data['html_url']}")
 
-        description = f"From Transformers to Agents -- {self.title}"
-        existing_id = self.gist_id()
-        try:
-            if existing_id:
-                data = client.update(existing_id, description, filename, content)
-                action = "updated"
-            else:
-                data = client.create(description, filename, content)
-                action = "created"
-        except requests.exceptions.RequestException as e:
-            print(f"  {self.slug}: FAILED -- {e}")
-            return
-
-        self.write_gist_md(filename, data["id"], data["html_url"])
-        print(f"  {self.slug}: {action} -> {data['html_url']}")
+        self.write_gist_md(entries)
 
     # -- link resolution --------------------------------------------------
 
-    def resolve_link(self, target: str, repo: str, branch: str, gist_url: str | None) -> str:
+    def resolve_link(self, target: str, repo: str, branch: str) -> str:
         if target.startswith(("http://", "https://", "mailto:", "#")):
             return target
         frag = ""
@@ -515,16 +568,19 @@ Medium conversion then picks up the URL below automatically.
             # lives -- the browser resolves this straight off disk, so
             # nothing needs to be hosted anywhere first.
             return posixpath.relpath(combined, self.medium_dir) + frag
-        if gist_url and ext == ".py" and f"{self.rel_dir}/scripts/" in combined:
-            return gist_url
+        if ext == ".py" and f"{self.rel_dir}/scripts/" in combined:
+            script_name = posixpath.basename(combined)
+            gist_url = self.gist_url_for(script_name)
+            if gist_url:
+                return gist_url
         if ext == "":
             return f"https://github.com/{repo}/tree/{branch}/{combined}{frag}"
         return f"https://github.com/{repo}/blob/{branch}/{combined}{frag}"
 
-    def rewrite_links(self, text: str, repo: str, branch: str, gist_url: str | None, log: list) -> str:
+    def rewrite_links(self, text: str, repo: str, branch: str, log: list) -> str:
         def _sub(m):
             bang, label, target = m.groups()
-            new_target = self.resolve_link(target, repo, branch, gist_url)
+            new_target = self.resolve_link(target, repo, branch)
             if new_target != target:
                 log.append((target, new_target))
             return f"{bang}[{label}]({new_target})"
@@ -543,15 +599,12 @@ Medium conversion then picks up the URL below automatically.
         text = self.readme_path.read_text(encoding="utf-8")
         text = MediumConverter.cut_at_marker(text)
 
-        gist_url = self.gist_url()
         log: list[tuple[str, str]] = []
-        text = self.rewrite_links(text, repo, branch, gist_url, log)
+        text = self.rewrite_links(text, repo, branch, log)
+        text = MediumConverter.insert_gist_embed_lines(text)
         text = MediumConverter.flatten_tables(text)
 
         html_body = MediumConverter.render_html(text)
-        if gist_url:
-            html_body = MediumConverter.insert_gist_line(html_body, gist_url)
-
         html_doc = MediumConverter.wrap_html(self.title, html_body)
 
         out_dir = self.path / "medium"
@@ -562,7 +615,7 @@ Medium conversion then picks up the URL below automatically.
         print(f"  {self.slug}")
         print(f"    title:  {self.title}")
         print(f"    output: {out_path.relative_to(self.repo_root)}")
-        print(f"    gist:   {self.gist_status()}")
+        print(f"    gists:  {self.gist_status()}")
         if log:
             print(f"    rewrote {len(log)} relative link(s):")
             for old, new in log:
@@ -618,9 +671,9 @@ class SeriesRepo:
 
     def sync_gists(self, articles: list[Article], repo: str, branch: str, token: str) -> None:
         client = GitHubGist(token)
-        print(f"syncing gists to {repo}...\n")
+        print(f"syncing gists to {repo} (one per script)...\n")
         for article in articles:
-            article.sync_gist(client, repo, branch)
+            article.sync_gists(client, repo, branch)
         print()
 
     def convert(self, articles: list[Article], repo: str, branch: str) -> None:
@@ -644,7 +697,7 @@ def main() -> None:
     )
     parser.add_argument("--repo", default=None, help="owner/repo on GitHub (auto-detected from 'git remote get-url origin' if omitted).")
     parser.add_argument("--branch", default="main", help="Branch for image/link URLs (default: main).")
-    parser.add_argument("--sync-gists", action="store_true", help="Create/update each article's Gist via the GitHub API before converting. Needs GITHUB_TOKEN (.env or environment) with gist access.")
+    parser.add_argument("--sync-gists", action="store_true", help="Create/update every scripts/*.py file's own Gist via the GitHub API before converting. Needs GITHUB_TOKEN (.env or environment) with gist access.")
     args = parser.parse_args()
 
     series = SeriesRepo(Path(__file__).resolve().parent)
