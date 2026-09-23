@@ -206,6 +206,7 @@ Article 2 covers prompting fundamentals: now that I know what's happening inside
 
 Diagrams and code in this article are my own. The tokenization, embeddings, and generation examples run real pretrained models via Hugging Face; self-attention is a from-scratch numpy illustration of the mechanism. None of it is reproduced from the course or the book.
 
+<!-- medium:cut -->
 ## In this folder
 
 | Path | What it is |

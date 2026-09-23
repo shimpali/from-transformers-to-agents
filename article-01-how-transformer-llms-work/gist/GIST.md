@@ -1,29 +1,20 @@
 # Gist for this article
 
-**Status: not yet published.**
+**Status: published, kept in sync by `main.py --sync-gists`.**
 
-The series convention (one Gist per article, not per snippet) is: paste [`how_transformer_llms_work.py`](how_transformer_llms_work.py)
-into a new GitHub Gist, then embed that Gist's URL in the Medium draft so the code renders as a native,
-syntax-highlighted, copy-pasteable block instead of a screenshot.
+One Gist per article (not per snippet), built by concatenating every file in
+`scripts/`, in filename order. To update it after changing code, just run:
 
-## How to publish it
+    python3 main.py article-01-how-transformer-llms-work --sync-gists
 
-1. Go to [gist.github.com](https://gist.github.com/).
-2. Filename: `how_transformer_llms_work.py`.
-3. Paste the contents of [`how_transformer_llms_work.py`](how_transformer_llms_work.py) in this folder.
-4. Description: `From Transformers to Agents — Article 1: How Transformer LLMs Work`.
-5. Create as a **public** Gist (Medium can only embed public Gists).
-6. Copy the Gist URL and:
-   - paste it into the Medium draft where the code block should render live, and
-   - update the line below with the real URL.
+That rebuilds `gist/how_transformer_llms_work.py` from `scripts/*.py` and pushes it to this
+same Gist (matched by the ID below) -- nothing to copy-paste by hand. The
+Medium conversion then picks up the URL below automatically.
+
+## Gist ID
+
+15e6d3bec1c4969a7cefeca4273c50e2
 
 ## Published URL
 
-`<paste the live gist.github.com URL here once created>`
-
-## Why a local copy lives here too
-
-The Gist is the thing Medium embeds, but this repo folder (and the notebook one level up) stays the
-canonical, versioned source. If article code ever changes, edit `scripts/*.py` in the article folder,
-regenerate this concatenated file, and update the Gist's content to match — the Gist is a mirror, not
-the source of truth.
+https://gist.github.com/shimpali/15e6d3bec1c4969a7cefeca4273c50e2

@@ -13,3 +13,11 @@ venv/
 # Editors
 .vscode/
 .idea/
+
+# main.py output -- regenerate with `python3 main.py`, no need to track it
+article-*/medium/
+article-*/images/*.png
+
+# secrets -- never commit
+.env
+
