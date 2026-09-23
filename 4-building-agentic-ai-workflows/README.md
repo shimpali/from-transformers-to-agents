@@ -1,5 +1,7 @@
 # Building Agentic AI Workflows
 
+What is agentic AI, degrees of autonomy, applications, task decomposition.
+
 **Status: not started.**
 
 Part of the *From Transformers to Agents* series. See the [series README](../README.md) for the
@@ -10,7 +12,7 @@ Once drafted, this folder will hold:
 | Path | What it is |
 |---|---|
 | `README.md` | This file, replaced with the full article |
-| `building-agentic-ai-workflows.ipynb` | Companion notebook assembled from this article's scripts |
+| `building_agentic_ai_workflows.ipynb` | Companion notebook assembled from this article's scripts |
 | `scripts/` | Numbered, runnable Python scripts matching the article's flow |
 | `images/` | Diagrams referenced in the README, as standalone SVGs |
 | `gist/` | The single concatenated file this article's Medium code embed is pasted from |

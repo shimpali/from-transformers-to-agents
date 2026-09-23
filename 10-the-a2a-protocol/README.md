@@ -1,4 +1,6 @@
-# The A2A Protocol
+# The A2A Protocol: Connecting AI Agents
+
+Agent discovery, client-server architecture, orchestrating multi-agent workflows across frameworks.
 
 **Status: not started.**
 
@@ -10,7 +12,7 @@ Once drafted, this folder will hold:
 | Path | What it is |
 |---|---|
 | `README.md` | This file, replaced with the full article |
-| `the-a2a-protocol.ipynb` | Companion notebook assembled from this article's scripts |
+| `the_a2a_protocol.ipynb` | Companion notebook assembled from this article's scripts |
 | `scripts/` | Numbered, runnable Python scripts matching the article's flow |
 | `images/` | Diagrams referenced in the README, as standalone SVGs |
 | `gist/` | The single concatenated file this article's Medium code embed is pasted from |

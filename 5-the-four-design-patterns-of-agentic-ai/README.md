@@ -1,5 +1,7 @@
 # The Four Design Patterns of Agentic AI
 
+Overview of Reflection, Tool Use, Planning, and Multi-Agent patterns.
+
 **Status: not started.**
 
 Part of the *From Transformers to Agents* series. See the [series README](../README.md) for the
@@ -10,7 +12,7 @@ Once drafted, this folder will hold:
 | Path | What it is |
 |---|---|
 | `README.md` | This file, replaced with the full article |
-| `the-four-design-patterns-of-agentic-ai.ipynb` | Companion notebook assembled from this article's scripts |
+| `the_four_design_patterns_of_agentic_ai.ipynb` | Companion notebook assembled from this article's scripts |
 | `scripts/` | Numbered, runnable Python scripts matching the article's flow |
 | `images/` | Diagrams referenced in the README, as standalone SVGs |
 | `gist/` | The single concatenated file this article's Medium code embed is pasted from |

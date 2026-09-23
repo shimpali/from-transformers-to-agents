@@ -9,24 +9,48 @@ file that becomes that article's GitHub Gist for Medium's inline code embeds. Th
 [HandsOnLLM/Hands-On-Large-Language-Models](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models),
 adapted from numbered chapters to numbered articles.
 
-## Series roadmap
+## Series overview
 
-| # | Article | Status | Folder |
-|---|---|---|---|
-| 1 | How Transformer LLMs Work | ✅ Drafted, in review | [`1-how-transformer-llms-work`](1-how-transformer-llms-work) |
-| 2 | Prompting Fundamentals for LLMs | Not started | [`2-prompting-fundamentals-for-llms`](2-prompting-fundamentals-for-llms) |
-| 3 | Function-Calling and Data Extraction with LLMs | Not started | [`3-function-calling-and-data-extraction-with-llms`](3-function-calling-and-data-extraction-with-llms) |
-| 4 | Building Agentic AI Workflows | Not started | [`4-building-agentic-ai-workflows`](4-building-agentic-ai-workflows) |
-| 5 | The Four Design Patterns of Agentic AI | Not started | [`5-the-four-design-patterns-of-agentic-ai`](5-the-four-design-patterns-of-agentic-ai) |
-| 6 | Reflection in AI | Not started | [`6-reflection-in-ai`](6-reflection-in-ai) |
-| 7 | Extending Agent Capabilities: Tools, APIs & MCP | Not started | [`7-extending-agent-capabilities-tools-apis-mcp`](7-extending-agent-capabilities-tools-apis-mcp) |
-| 8 | Advanced Autonomy: Planning and Multi-Agent Systems | Not started | [`8-advanced-autonomy-planning-and-multi-agent-systems`](8-advanced-autonomy-planning-and-multi-agent-systems) |
-| 9 | Evaluating and Optimizing Agents for Production | Not started | [`9-evaluating-and-optimizing-agents-for-production`](9-evaluating-and-optimizing-agents-for-production) |
-| 10 | The A2A Protocol | Not started | [`10-the-a2a-protocol`](10-the-a2a-protocol) |
-| 11 | Prompting Multi-Agent Systems | Not started | [`11-prompting-multi-agent-systems`](11-prompting-multi-agent-systems) |
+- **Total articles:** 11
+- **Structure:** Theory → Building → Scaling → Operating
+- **Target:** Technical practitioners, engineers, AI enthusiasts
+- **Approach:** Sharing learnings from DeepLearning.AI courses, not written as an expert
 
-Grouped into four sections: **Foundation** (1–3), **Agentic AI deep dive** (4–7), **Orchestration**
-(8–10), **Deployment & implementation** (11).
+## Series plan
+
+Article links point at each article's file in this repo for now. They'll be swapped for the
+published Medium URLs as each one goes live.
+
+### Section 1: Foundation (understanding the basics)
+
+1. [How Transformer LLMs Work](1-how-transformer-llms-work/README.md) — tokenization, embeddings, attention, transformer blocks. **Drafted, in review.**
+2. [Prompting Fundamentals for LLMs](2-prompting-fundamentals-for-llms/README.md) — how to instruct LLMs effectively, system prompts, prompt engineering basics. *Not started.*
+3. [Function-Calling and Data Extraction with LLMs](3-function-calling-and-data-extraction-with-llms/README.md) — making LLMs interface with external tools and data. *Not started.*
+
+### Section 2: Agentic AI deep dive (core patterns)
+
+4. [Building Agentic AI Workflows](4-building-agentic-ai-workflows/README.md) — what is agentic AI, degrees of autonomy, applications, task decomposition. *Not started.*
+5. [The Four Design Patterns of Agentic AI](5-the-four-design-patterns-of-agentic-ai/README.md) — overview of Reflection, Tool Use, Planning, Multi-Agent patterns. *Not started.*
+6. [Reflection in AI: Teaching Agents to Critique Themselves](6-reflection-in-ai/README.md) — why reflection beats direct generation, using external feedback, iterative improvement. *Not started.*
+7. [Extending Agent Capabilities: Tools, APIs & MCP](7-extending-agent-capabilities-tools-apis-mcp/README.md) — creating tools, connecting to external systems, code execution, Model Context Protocol. *Not started.*
+
+### Section 3: Orchestration (connecting it all)
+
+8. [Advanced Autonomy: Planning and Multi-Agent Systems](8-advanced-autonomy-planning-and-multi-agent-systems/README.md) — task planning, adaptive workflows, multi-agent orchestration, communication patterns. *Not started.*
+9. [Evaluating and Optimizing Agents for Production](9-evaluating-and-optimizing-agents-for-production/README.md) — building evals, error analysis, cost/latency optimization, production readiness. *Not started.*
+10. [The A2A Protocol: Connecting AI Agents](10-the-a2a-protocol/README.md) — agent discovery, client-server architecture, orchestrating multi-agent workflows across frameworks. *Not started.*
+
+### Section 4: Deployment & implementation (operating at scale)
+
+11. [Prompting Multi-Agent Systems: A2A Workflows in Practice](11-prompting-multi-agent-systems/README.md) — instructing orchestrated agents, system design for distributed systems, real-world patterns. *Not started.*
+
+### Course references
+
+- [How Transformer LLMs Work](https://www.deeplearning.ai/courses/how-transformer-llms-work)
+- [Function-Calling and Data Extraction with LLMs](https://www.deeplearning.ai/courses/function-calling-and-data-extraction-with-llms)
+- [Agentic AI](https://www.deeplearning.ai/courses/agentic-ai)
+- [A2A: The Agent2Agent Protocol](https://www.deeplearning.ai/courses/a2a-the-agent2agent-protocol)
+- [AI Prompting for Everyone](https://www.deeplearning.ai/courses/ai-prompting-for-everyone)
 
 ## Folder layout
 
