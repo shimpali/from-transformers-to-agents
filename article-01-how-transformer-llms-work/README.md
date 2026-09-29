@@ -52,7 +52,7 @@ The decoder's self-attention is also **masked**: when generating word 5, it can 
 
 That two-halves design is still right for translation. But most of what this series actually covers picked just one half.
 
-- **Encoder-only** (BERT, 2018): keeps just the encoder and drops generation entirely. It's trained by hiding a word and predicting it from both directions. That makes it good at *representing* language: classification, clustering, semantic search. The book calls these **representation models**.
+- **Encoder-only** (BERT, 2018): keeps just the encoder and drops generation entirely. It's trained by hiding a word and predicting it from both directions. That makes it good at *representing* language: classification, clustering, semantic search. Hands-On Large Language Models, the companion book for this series, calls these representation models **representation models**.
 - **Decoder-only** (GPT-1, 2018): keeps just the decoder, and drops cross-attention too, since there's no encoder output left to attend to. What's left is masked self-attention plus a feed-forward network, repeated N times, trained to predict the next token. The book calls these **generative models**. Scaled from GPT-1's 117 million parameters to GPT-3's 175 billion, this is the shape the rest of this series is actually about.
 
 A GPT-style LLM is just the decoder half, alone. Modern models skip the encoder stack entirely, so everything from here on (tokenization, embeddings, self-attention, the block) happens inside that decoder-only shape, not the two-halves architecture the 2017 paper's diagram usually shows.
@@ -83,7 +83,7 @@ Full script: `01_tokenization.py`
 
 ## Embeddings: giving numbers meaning
 
-A token ID is just an arbitrary index. The ID for "king" carries no more relationship to "queen" than it does to "bicycle." Embeddings are the fix: an embedding layer is a lookup table mapping each token ID to a vector of a few hundred numbers, learned during training so that words used in similar contexts end up with similar vectors.
+A token ID is just an arbitrary index. The ID for "king" carries no more relationship to "queen" than it does to "bicycle." That's the problem embeddings solve: an embedding layer is a lookup table mapping each token ID to a vector of a few hundred numbers, learned during training so that words used in similar contexts end up with similar vectors.
 
 Real embeddings have hundreds of dimensions. But the geometry they learn is easiest to see squashed down to two. Words with related meanings cluster together. Some relationships even come out as consistent directions: the vector from "man" to "woman" points roughly the same way, and the same distance, as the vector from "king" to "queen."
 

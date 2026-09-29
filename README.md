@@ -25,7 +25,7 @@ published Medium URLs as each one goes live.
 
 ### Article 1: ["How Transformer LLMs Work"](article-01-how-transformer-llms-work/README.md)
 - Tokenization, embeddings, attention, transformer blocks
-- **Status:** Drafted, in review
+- **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/how-transformer-llms-work-544f04f4d294)
 
 ### Article 2: ["Prompting Fundamentals for LLMs"](article-02-prompting-fundamentals-for-llms/README.md)
 - How to instruct LLMs effectively, system prompts, prompt engineering basics
