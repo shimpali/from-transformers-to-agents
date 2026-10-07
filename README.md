@@ -28,8 +28,8 @@ published Medium URLs as each one goes live.
 - **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/how-transformer-llms-work-544f04f4d294)
 
 ### Article 2: ["Prompting Fundamentals for LLMs"](article-02-prompting-fundamentals-for-llms/README.md)
-- How to instruct LLMs effectively, system prompts, prompt engineering basics
-- **Status:** Not started
+- Choosing between pretrained knowledge, search and deep research, context, sycophancy, rubric-based critique, multimodal prompting, tool selection
+- **Status:** Drafted, in review
 
 ### Article 3: ["Function-Calling and Data Extraction with LLMs"](article-03-function-calling-and-data-extraction-with-llms/README.md)
 - Making LLMs interface with external tools and data
