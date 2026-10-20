@@ -6,9 +6,11 @@ I've spent plenty of time prompting these models without being able to explain w
 
 ![The pipeline: text becomes tokens, tokens become embeddings, embeddings flow through transformer blocks, a next token comes out](images/01-pipeline-overview.svg)
 
+*Run this once per output token, feeding each new token back in, and you get generation.*
+
 ## Series roadmap
 
-This is article 1 of an 11-part series working through DeepLearning.AI's language model and agentic AI courses, grouped into four sections:
+This is article 1 of an 11-part series that works from DeepLearning.AI courses and independent sources, grouped into four sections:
 
 1. **Foundation (understanding the basics)**: how transformer LLMs work (this article), prompting fundamentals, function-calling and data extraction.
 2. **Agentic AI deep dive (core patterns)**: agentic workflows, the four design patterns, reflection, tools and MCP.
@@ -50,9 +52,11 @@ The decoder's self-attention is also **masked**: when generating word 5, it can 
 
 ![Side-by-side comparison of an encoder block, using bidirectional self-attention, and a decoder block, using masked self-attention plus a cross-attention layer that the book shows is dropped in decoder-only LLMs](images/02-encoder-vs-decoder.svg)
 
+*GPT-style LLMs stack only decoder blocks, minus the dashed cross-attention layer: there's no encoder output left to attend to.*
+
 That two-halves design is still right for translation. But most of what this series actually covers picked just one half.
 
-- **Encoder-only** (BERT, 2018): keeps just the encoder and drops generation entirely. It's trained by hiding a word and predicting it from both directions. That makes it good at *representing* language: classification, clustering, semantic search. Hands-On Large Language Models, the companion book for this series, calls these representation models **representation models**.
+- **Encoder-only** (BERT, 2018): keeps just the encoder and drops generation entirely. It's trained by hiding a word and predicting it from both directions. That makes it good at *representing* language: classification, clustering, semantic search. Hands-On Large Language Models, the companion book for this series, calls these **representation models**.
 - **Decoder-only** (GPT-1, 2018): keeps just the decoder, and drops cross-attention too, since there's no encoder output left to attend to. What's left is masked self-attention plus a feed-forward network, repeated N times, trained to predict the next token. The book calls these **generative models**. Scaled from GPT-1's 117 million parameters to GPT-3's 175 billion, this is the shape the rest of this series is actually about.
 
 A GPT-style LLM is just the decoder half, alone. Modern models skip the encoder stack entirely, so everything from here on (tokenization, embeddings, self-attention, the block) happens inside that decoder-only shape, not the two-halves architecture the 2017 paper's diagram usually shows.
@@ -66,6 +70,8 @@ Subword tokenization is a deliberate compromise, not an implementation detail. W
 > **A common mix-up:** tokens aren't universal. The same sentence tokenizes differently depending on which model's tokenizer you're using: BERT, GPT-2, and GPT-4 each split an unusual word into a different number of pieces. There's no single "correct" tokenization, only the one a given model was trained on.
 
 ![Six tokens split from the sentence "Self-attention is powerful", each mapped to an integer ID](images/03-tokenization-example.svg)
+
+*The model never sees the string, only this list of integer IDs.*
 
 ```python
 # See how a real tokenizer splits a sentence into pieces + IDs
@@ -88,6 +94,8 @@ A token ID is just an arbitrary index. The ID for "king" carries no more relatio
 Real embeddings have hundreds of dimensions. But the geometry they learn is easiest to see squashed down to two. Words with related meanings cluster together. Some relationships even come out as consistent directions: the vector from "man" to "woman" points roughly the same way, and the same distance, as the vector from "king" to "queen."
 
 ![A simplified 2D view of word embeddings: king, queen, man, and woman cluster together with parallel vectors, while cat and dog form a separate cluster](images/04-embeddings-2d-space.svg)
+
+*Similar meanings sit close together, and consistent relationships (male → female) point the same way.*
 
 The same idea shows up outside language too: song-recommendation engines embed tracks from playlists the same way, and search engines embed whole documents, all to place similar things near each other in vector space.
 
@@ -126,6 +134,8 @@ And since this is really the decoder's version of self-attention: those "every o
 Transformers don't do this just once. They run many attention **heads** in parallel, each free to specialize in tracking a different kind of relationship (one might track pronoun references, another might track verb-subject pairs), then combine all the heads' results together.
 
 ![The word "it" attending to every other word in "The cat sat because it was tired," with 62% of the attention weight landing on "cat"](images/05-self-attention-example.svg)
+
+*Most of it lands on “cat”, and that’s how the model resolves the pronoun.*
 
 ```python
 # Self-attention from scratch on toy vectors -- numpy only,
@@ -167,6 +177,8 @@ This is the part I almost skipped past as boilerplate. But it matters more than 
 
 ![One transformer block: self-attention, add and normalize, a feed-forward network, add and normalize again, with residual connections skipping around both sub-layers and the whole block repeating N times](images/06-transformer-block.svg)
 
+*Dashed lines are residual connections: they carry the input forward unchanged, so a block only has to learn what to add, not the whole representation from scratch.*
+
 Stack this block N times (12 layers for GPT-1, dozens for the larger models the course and the book both reference), and each layer builds on the representations the last one produced.
 
 Early layers pick up local, syntactic patterns. Later layers combine those into more abstract, longer-range meaning.
@@ -184,6 +196,8 @@ Everything above (tokenizing, embedding, attending, stacking blocks, the LM head
 Generating a whole paragraph is just that forward pass, run in a loop. The decoder's masking makes sure each new prediction only looks at what's already been generated.
 
 ![The generation loop: tokens so far go through the decoder stack, producing a probability over the vocabulary, a token is sampled, appended, and the loop repeats](images/07-generation-loop.svg)
+
+*Every loop produces exactly one new token, using the whole sequence generated so far. Repeat until an end-of-sequence token appears or a length limit is hit.*
 
 ```python
 # The autoregressive loop underneath every chat response, made explicit
@@ -235,4 +249,4 @@ Diagrams and code in this article are my own. The tokenization, embeddings, and 
 | [`scripts/03_self_attention.py`](scripts/03_self_attention.py) | Self-attention from scratch on toy vectors (numpy only) |
 | [`scripts/04_generation_loop.py`](scripts/04_generation_loop.py) | GPT-2 greedy decoding, the autoregressive loop made explicit |
 | [`images/`](images) | The 7 diagrams above, as standalone SVGs |
-| [`gist/`](gist) | The single concatenated file this article's Medium code embed is pasted from, see [`gist/GIST.md`](gist/GIST.md) |
+| [`gist/`](gist) | One Gist ID and URL per script, kept in sync by `main.py --sync-gists`, see [`gist/GIST.md`](gist/GIST.md) |

@@ -1,6 +1,6 @@
-transformers
-torch
-numpy
-markdown
-requests
-playwright
+transformers==5.17.0
+torch==2.14.0
+numpy==2.5.3
+markdown==3.10.3
+requests==2.34.2
+playwright==1.63.0

@@ -167,6 +167,7 @@ class SvgToPng:
                 try:
                     measure_page = browser.new_page(viewport={"width": int(w), "height": int(h)})
                     measure_page.goto(svg_path.resolve().as_uri())
+                    measure_page.evaluate("document.fonts.ready")  # embedded Nunito must be loaded before measuring
                     bbox = measure_page.evaluate(
                         "() => { const b = document.querySelector('svg').getBBox(); "
                         "return {x: b.x, y: b.y, width: b.width, height: b.height}; }"
@@ -187,6 +188,7 @@ class SvgToPng:
                     device_scale_factor=scale,
                 )
                 page.goto(svg_path.resolve().as_uri())
+                page.evaluate("document.fonts.ready")  # embedded Nunito must be loaded before the screenshot
                 page.screenshot(path=str(png_path), clip=clip)
                 page.close()
             finally:
