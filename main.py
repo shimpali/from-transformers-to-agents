@@ -189,7 +189,8 @@ class SvgToPng:
                 )
                 page.goto(svg_path.resolve().as_uri())
                 page.evaluate("document.fonts.ready")  # embedded Nunito must be loaded before the screenshot
-                page.screenshot(path=str(png_path), clip=clip)
+                # omit_background: the diagrams have rounded corners; without it Chromium paints them on white (white corners in Medium dark mode)
+                page.screenshot(path=str(png_path), clip=clip, omit_background=True)
                 page.close()
             finally:
                 browser.close()
