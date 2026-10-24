@@ -281,96 +281,105 @@ def a1_07():
 
 # ------------------------------------------------------------------ Article 2
 def a2_01():
-    d = Diagram('Four decisions behind a good prompt', 'Make each one on purpose, and the answer improves.',
-                'Left to right: pick the source (memory, web, or research), give context (only what is relevant), get honest critique (rubric and a second model), and match the tool (search, code, or files).',
+    d = Diagram('Your prompt is the start of the text', 'The model continues it one token at a time, re-reading all of it on every turn.',
+                'Four cards: the model reads everything in the window (earlier messages, files, your message); your words tilt the odds of each next token; reasoning models write rough-work tokens before the answer; a checkable definition of done tells it when to stop. A loop arrow shows the next message re-sending all of it.',
                 bar='sand')
 
-    def s1(d, cx, sy, k): slabs(d, cx, sy, k, ['Memory', 'Web', 'Research'], w=190, h=40, g=14)
+    def s1(d, cx, sy, k):
+        w, h, g = 200, 40, 12
+        ys = [sy - (3 * h + 2 * g) / 2 + i * (h + g) for i in range(3)]
+        d.chip(cx - w / 2, ys[0], w, h, k, 'Earlier messages', 'dim')
+        d.chip(cx - w / 2, ys[1], w, h, k, 'Attached file', 'outline')
+        d.chip(cx - w / 2, ys[2], w, h, k, 'Your message', 'solid')
 
     def s2(d, cx, sy, k):
-        w, h, g = 190, 40, 14
-        ys = [sy - (3 * h + 2 * g) / 2 + i * (h + g) for i in range(3)]
-        d.chip(cx - w / 2, ys[0], w, h, k, 'Your question', 'solid')
-        d.chip(cx - w / 2, ys[1], w, h, k, 'Relevant context', 'outline')
-        d.chip(cx - w / 2, ys[2], w, h, k, 'Everything else', 'dim')
+        a = ACC[k][0]
+        base = sy + 58
+        for j, (lbl, hh, solid) in enumerate((('Yes', 44, False), ('No', 112, True))):
+            bx = cx - 70 + j * 84
+            if solid:
+                d.o.append(f'<rect x="{bx}" y="{base-hh}" width="56" height="{hh}" rx="12" fill="{a}"/>')
+                d.t(bx + 28, base - hh / 2 + 5.4, lbl, 16, 800, INK)
+            else:
+                d.o.append(f'<rect x="{bx}" y="{base-hh}" width="56" height="{hh}" rx="12" fill="{BG}" stroke="{a}" stroke-opacity=".7" stroke-width="2.6"/>')
+                d.t(bx + 28, base - hh / 2 + 5.4, lbl, 16, 800, a)
 
-    def s3(d, cx, sy, k): slabs(d, cx, sy, k, ['Rubric', 'Second model'], w=190, h=44, g=16)
+    def s3(d, cx, sy, k):
+        ws, g, h = [40, 40, 40, 96], 8, 50
+        x = cx - (sum(ws) + g * (len(ws) - 1)) / 2
+        for w, l, st in zip(ws, ['…', '…', '…', 'Answer'], ['ghost', 'ghost', 'ghost', 'solid']):
+            d.chip(x, sy - h / 2, w, h, k, l, st)
+            x += w + g
 
-    def s4(d, cx, sy, k): slabs(d, cx, sy, k, ['Search', 'Code', 'Files'], w=190, h=40, g=14)
+    def s4(d, cx, sy, k): slabs(d, cx, sy, k, ['Under 400 characters', 'Every quote listed', 'Ready for a slide'], w=210, h=36, g=12)
 
-    steps = [(1, 'SOURCE', 'Pick the source', 'memory, web, or research', '“Where should this come from?”', 'sand'),
-             (2, 'CONTEXT', 'Give context', 'only what is relevant', '“What does it need to know?”', 'blue'),
-             (3, 'CRITIQUE', 'Get honest critique', 'rubric, second model', '“What would a skeptic say?”', 'teal'),
-             (4, 'TOOL', 'Match the tool', 'search, code, files', '“Which tool fits the task?”', 'sage')]
+    steps = [(1, 'SEE', 'Reads it all', 'history, files, your message', '“What is in the window?”', 'blue'),
+             (2, 'TILT', 'Your words tilt it', 'every token shifts the odds', '“What am I nudging it toward?”', 'sand'),
+             (3, 'THINK', 'Rough work first', 'extra tokens before answering', '“How much effort does this need?”', 'sage'),
+             (4, 'STOP', 'Stops at done', 'a finish line it can check', '“How will I know it is done?”', 'teal')]
     xs, top, bot = d.step_cards(steps, 275, 44, [s1, s2, s3, s4])
-    return d.save(A2, '01-prompting-overview', bot + 24)
+    x1, x4 = xs[0] + 137.5, xs[3] + 137.5
+    yb = bot + 64
+    d.arrow([(x4, bot + 1), (x4, yb), (x1, yb), (x1, bot + 3)], r=26)
+    d.pill((x1 + x4) / 2, yb, 'next message: all of it is sent again', 18, 44)
+    CAPTIONS['a2/01-prompt-is-the-start'] = 'Everything in the window shapes the next token, and every new message sends the whole window again.'
+    return d.save(A2, '01-prompt-is-the-start', bot + 110)
 
 
 def a2_02():
-    d = Diagram('Choosing an information source', 'Two questions decide where the answer should come from.',
-                'Flowchart: start with your question. If it needs recent, local, or niche information, go on; otherwise use pretrained knowledge. If it is also complex and multi-part, use deep research; otherwise use web search.',
-                bar='sand')
-    top = 150
-    bh = 104
-    ymain = top
+    d = Diagram('A clear task, written as a brief', 'Goal first, then only what serves it, then a finish line you can test.',
+                'Five rows pairing each part of a brief with a book-summary example: goal, context, constraints, done when (checkable asserts), and how judgment calls get checked (a short rubric).',
+                bar='blue')
+    top, bh, gp = 132, 78, 18
+    xl, wl = 24, 300
+    xr, wr = 372, 884
+    rows = [('Goal', 'what you want back', 'Summarize the themes of chapters 3 to 5', 'sand'),
+            ('Context', 'only what serves the goal', 'The chapters themselves, not a page of reviews', 'blue'),
+            ('Constraints', 'what must hold', 'Plain English, for a book club slide', 'sage'),
+            ('Done when', 'asserts it can check', 'Each theme under 400 characters, every listed quote included', 'teal'),
+            ('Judgment calls', 'a rubric or examples', 'Score the tone against two example summaries', 'neutral')]
+    for i, (lbl, sub, ex, k) in enumerate(rows):
+        y = top + i * (bh + gp)
+        d.block(xl, y, wl, bh, k, lbl, sub, fs=18, subfs=14)
+        d.card(xr, y, wr, bh, k, r=18)
+        d.t(xr + 32, y + bh / 2 + 6, ex, 18, 600, TEXT, 'start')
+        d.arrow([(xl + wl + 1, y + bh / 2), (xr - 1, y + bh / 2)])
+    bot = top + 5 * bh + 4 * gp
+    CAPTIONS['a2/02-clear-task-brief'] = 'A definition of done works like a test suite. The model can check it before it answers.'
+    return d.save(A2, '02-clear-task-brief', bot + 24)
+
+
+def a2_03():
+    d = Diagram('Know it or look it up', 'Two questions decide where the answer should come from.',
+                'Flowchart: start with your question. If the answer could have changed since the training cutoff, go on; otherwise the model can answer from training, but check anything that sounds like common knowledge. If it needs many sources compared, use deep research; otherwise use web search.',
+                bar='sage')
+    top, bh = 150, 104
     qx, qw = 24, 170
     x1, w1 = 278, 280
     x2, w2 = 642, 280
     x3, w3 = 1006, 250
-    d.block(qx, ymain + 20, qw, 64, 'neutral', 'Your question', None, r=32)
-    d.block(x1, ymain, w1, bh, 'sand', 'Is it recent, local, or niche?', 'after the training cutoff, near me, rarely discussed')
-    d.block(x2, ymain, w2, bh, 'sand', 'Is it complex and multi-part?', 'needs many sources compared and combined')
-    cy = ymain + bh / 2
+    d.block(qx, top + 20, qw, 64, 'neutral', 'Your question', None, r=32)
+    d.block(x1, top, w1, bh, 'sand', 'Could it have changed?', 'since the model\'s training cutoff')
+    d.block(x2, top, w2, bh, 'sand', 'Needs many sources?', 'compared, combined, cited')
+    cy = top + bh / 2
     d.arrow([(qx + qw + 1, cy), (x1 - 1, cy)])
     d.arrow([(x1 + w1 + 1, cy), (x2 - 1, cy)])
     d.arrow([(x2 + w2 + 1, cy), (x3 - 1, cy)])
     d.pill((x1 + w1 + x2) / 2, cy - 30, 'Yes', 14, 28)
     d.pill((x2 + w2 + x3) / 2, cy - 30, 'Yes', 14, 28)
-    ylow = ymain + bh + 110
-    for (x, w, key, t, s) in ((x1, w1, 'blue', 'Pretrained knowledge', 'facts, definitions, summaries'),):
+    ylow = top + bh + 110
+    for (x, w, key, t, s_) in ((x1, w1, 'blue', 'Its own training', 'stable facts; check myths'),
+                               (x2, w2, 'sage', 'Web search', 'one fresh fact, check the source')):
         d.card(x, ylow, w, bh, key)
         d.t(x + w / 2, ylow + 44, t, 22, 800, TEXT)
-        d.t(x + w / 2, ylow + 74, s, 16, 400, MUTED)
-        d.arrow([(x + w / 2, ymain + bh + 1), (x + w / 2, ylow - 1)])
-        d.pill(x + w / 2 + 44, ymain + bh + 55, 'No', 14, 28)
-    d.card(x2, ylow, w2, bh, 'sage')
-    d.t(x2 + w2 / 2, ylow + 44, 'Web search', 22, 800, TEXT)
-    d.t(x2 + w2 / 2, ylow + 74, 'seconds, a few sources', 16, 400, MUTED)
-    d.arrow([(x2 + w2 / 2, ymain + bh + 1), (x2 + w2 / 2, ylow - 1)])
-    d.pill(x2 + w2 / 2 + 44, ymain + bh + 55, 'No', 14, 28)
-    d.card(x3, ymain, w3, bh, 'teal')
-    d.t(x3 + w3 / 2, ymain + 44, 'Deep research', 22, 800, TEXT)
-    d.t(x3 + w3 / 2, ymain + 74, 'minutes, many sources, cited', 16, 400, MUTED)
-    CAPTIONS['a2/02-choosing-an-information-source'] = 'Not sure whether the model will search? Ask for it explicitly.'
-    return d.save(A2, '02-choosing-an-information-source', ylow + bh + 24)
-
-
-def a2_03():
-    d = Diagram('Choosing the right tool for the task', 'Ask the questions in order and stop at the first yes.',
-                'Flowchart: if the task needs fresh external information, search the web. Otherwise, if it needs exact math or a chart, run code. Otherwise, if it needs a file read or written, use file tools. Otherwise, answer directly.',
-                bar='sage')
-    top = 130
-    bh, gp = 96, 46
-    xl, wl = 24, 500
-    xr, wr = 756, 500
-    rows = [('Needs fresh outside info?', 'recent, local, or niche', 'Web search', 'e.g. a highly rated gym near me', 'sage'),
-            ('Needs exact math or a chart?', 'numbers, trends, calculations', 'Run code', 'e.g. what are my sales trends?', 'teal'),
-            ('Needs a file read or written?', 'your documents, a new report', 'Read or write a file', 'e.g. summarize the attached report', 'blue')]
-    ys = [top + i * (bh + gp) for i in range(4)]
-    for i, (q, qs, o, os_, k) in enumerate(rows):
-        d.block(xl, ys[i], wl, bh, 'sand', q, qs)
-        d.card(xr, ys[i], wr, bh, k)
-        d.t(xr + wr / 2, ys[i] + 42, o, 22, 800, TEXT)
-        d.t(xr + wr / 2, ys[i] + 72, os_, 16, 400, MUTED)
-        d.arrow([(xl + wl + 1, ys[i] + bh / 2), (xr - 1, ys[i] + bh / 2)])
-        d.pill((xl + wl + xr) / 2, ys[i] + bh / 2 - 30, 'Yes', 14, 28)
-        d.arrow([(xl + wl / 2, ys[i] + bh + 1), (xl + wl / 2, ys[i + 1] - 1)])
-        d.pill(xl + wl / 2 + 44, ys[i] + bh + gp / 2, 'No', 14, 28)
-    d.card(xl, ys[3], wl, bh, 'neutral')
-    d.t(xl + wl / 2, ys[3] + 42, 'Answer directly', 22, 800, TEXT)
-    d.t(xl + wl / 2, ys[3] + 72, 'e.g. why do cats stare at walls?', 16, 400, MUTED)
-    CAPTIONS['a2/03-choosing-a-tool'] = 'Complex, multi-source questions can combine these steps, which is what deep research automates.'
-    return d.save(A2, '03-choosing-a-tool', ys[3] + bh + 24)
+        d.t(x + w / 2, ylow + 74, s_, 16, 400, MUTED)
+        d.arrow([(x + w / 2, top + bh + 1), (x + w / 2, ylow - 1)])
+        d.pill(x + w / 2 + 44, top + bh + 55, 'No', 14, 28)
+    d.card(x3, top, w3, bh, 'teal')
+    d.t(x3 + w3 / 2, top + 44, 'Deep research', 22, 800, TEXT)
+    d.t(x3 + w3 / 2, top + 74, 'many sources, cited', 16, 400, MUTED)
+    CAPTIONS['a2/03-know-or-look-up'] = 'Stable is not the same as true. The model repeats popular myths, so check anything that sounds like common knowledge.'
+    return d.save(A2, '03-know-or-look-up', ylow + bh + 24)
 
 
 ALL = {'a1_01': a1_01, 'a1_02': a1_02, 'a1_03': a1_03, 'a1_04': a1_04, 'a1_05': a1_05, 'a1_06': a1_06, 'a1_07': a1_07,

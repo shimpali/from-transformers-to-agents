@@ -4,8 +4,11 @@ main.py -- turn this repo's article folders into Medium-ready material.
 
 Two jobs, one script:
 
-  1. --sync-gists : create/update a GitHub Gist for every scripts/*.py file,
-     one Gist per snippet (not one combined Gist per article) so each can be
+  0. --build-notebooks : run every scripts/NN_name.py into a code-only,
+     executed scripts/NN_name.ipynb (code plus its output, no markdown).
+  1. --sync-gists : create/update a GitHub Gist for every scripts/*.py file
+     (or its scripts/NN_name.ipynb when one exists, so the embed shows the
+     output too), one Gist per snippet (not one combined Gist per article) so each can be
      embedded on its own, wherever the README references it. GitHub's Gist
      API is alive and well documented (unlike Medium's, which stopped
      issuing new integration tokens -- see the "Medium" note below).
@@ -257,11 +260,20 @@ class GitHubGist:
         resp.raise_for_status()
         return resp.json()
 
+    def get(self, gist_id: str) -> dict:
+        resp = requests.get(f"{self.API}/gists/{gist_id}", headers=self.headers, timeout=30)
+        resp.raise_for_status()
+        return resp.json()
+
     def update(self, gist_id: str, description: str, filename: str, content: str) -> dict:
+        # Drop any other file in the Gist (e.g. the old .py after a switch to
+        # .ipynb) so each Gist keeps exactly one file.
+        stale = [name for name in self.get(gist_id).get("files", {}) if name != filename]
+        files = {filename: {"content": content}, **{name: None for name in stale}}
         resp = requests.patch(
             f"{self.API}/gists/{gist_id}",
             headers=self.headers,
-            json={"description": description, "files": {filename: {"content": content}}},
+            json={"description": description, "files": files},
             timeout=30,
         )
         resp.raise_for_status()
@@ -359,11 +371,16 @@ class MediumConverter:
             out = []
             for line in body_lines:
                 cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                if len(header_cells) == 2 and len(cells) == 2:
+                    # Two-column tables read best as "first cell: second cell"
+                    first = cells[0].replace("**", "")
+                    out.append(f"- **{first}:** {cells[1].replace('<br>', ' ')}")
+                    continue
                 parts = []
                 for label, val in zip(header_cells, cells):
                     val = val.replace("<br>", " ")
                     parts.append(f"**{label}:** {val}" if label else val)
-                out.append("- " + " — ".join(parts))
+                out.append("- " + "; ".join(parts))  # no em dashes in article text
             return "\n".join(out) + "\n"
 
         return cls.process_outside_code(text, lambda t: cls.TABLE_RE.sub(_flatten, t))
@@ -514,24 +531,54 @@ conversion then picks up each URL automatically.
 
         entries: list[tuple[str, str | None, str | None]] = []
         for script in scripts:
-            content = self.build_snippet_source(script, repo, branch)
+            # A code-only notebook next to the script (scripts/NN_name.ipynb,
+            # made by --build-notebooks) is published instead of the .py, so
+            # the Medium embed shows the code and its output together.
+            notebook = script.with_suffix(".ipynb")
+            if notebook.exists():
+                filename, content = notebook.name, notebook.read_text(encoding="utf-8")
+            else:
+                filename, content = script.name, self.build_snippet_source(script, repo, branch)
             description = f"From Transformers to Agents -- {self.title} -- {self.script_label(script)}"
             existing_id = self.gist_id_for(script.name)
             try:
                 if existing_id:
-                    data = client.update(existing_id, description, script.name, content)
+                    data = client.update(existing_id, description, filename, content)
                     action = "updated"
                 else:
-                    data = client.create(description, script.name, content)
+                    data = client.create(description, filename, content)
                     action = "created"
             except requests.exceptions.RequestException as e:
                 print(f"  {self.slug}: {script.name} FAILED -- {e}")
                 entries.append((script.name, existing_id, self.gist_url_for(script.name)))
                 continue
             entries.append((script.name, data["id"], data["html_url"]))
-            print(f"  {self.slug}: {script.name} {action} -> {data['html_url']}")
+            print(f"  {self.slug}: {filename} {action} -> {data['html_url']}")
 
         self.write_gist_md(entries)
+
+    def build_notebooks(self) -> None:
+        """Run every scripts/*.py into scripts/NN_name.ipynb: one code cell,
+        executed, outputs kept, no markdown (the article carries the
+        explanation). Needs nbformat, nbclient and ipykernel."""
+        import nbformat
+        from nbclient import NotebookClient
+
+        scripts = self.script_files()
+        if not scripts:
+            print(f"  {self.slug}: skipped, no scripts/*.py found")
+            return
+        for script in scripts:
+            nb = nbformat.v4.new_notebook()
+            nb.cells = [nbformat.v4.new_code_cell(script.read_text(encoding="utf-8").rstrip("\n"))]
+            nb.metadata["kernelspec"] = {"name": "python3", "display_name": "Python 3", "language": "python"}
+            NotebookClient(nb, timeout=1800, kernel_name="python3",
+                           resources={"metadata": {"path": str(script.parent)}}).execute()
+            for cell in nb.cells:  # keep stdout and results, drop download bars and warnings
+                cell.outputs = [o for o in cell.outputs
+                                if not (o.get("output_type") == "stream" and o.get("name") == "stderr")]
+            nbformat.write(nb, script.with_suffix(".ipynb"))
+            print(f"  {self.slug}: {script.with_suffix('.ipynb').name} built")
 
     # -- link resolution --------------------------------------------------
 
@@ -578,7 +625,9 @@ conversion then picks up each URL automatically.
     # Matches a fenced code snippet immediately followed by the "Full
     # script: `name.py`" line that names its source file.
     CODE_BLOCK_RE = re.compile(
-        r"```[^\n]*\n.*?\n```\n\nFull script: `(?P<name>[^`]+)`\n\n",
+        # The body may not contain ``` itself, so a match can't start at an
+        # earlier, unrelated fence (pseudo-code, printed output) and run on.
+        r"```[^\n]*\n(?:(?!```).)*?\n```\n\nFull script: `(?P<name>[^`]+)`\n\n",
         re.DOTALL,
     )
 
@@ -708,7 +757,8 @@ def main() -> None:
     )
     parser.add_argument("--repo", default=None, help="owner/repo on GitHub (auto-detected from 'git remote get-url origin' if omitted).")
     parser.add_argument("--branch", default="main", help="Branch for image/link URLs (default: main).")
-    parser.add_argument("--sync-gists", action="store_true", help="Create/update every scripts/*.py file's own Gist via the GitHub API before converting. Needs GITHUB_TOKEN (.env or environment) with gist access.")
+    parser.add_argument("--sync-gists", action="store_true", help="Create/update every scripts/*.py file's own Gist via the GitHub API before converting (publishes scripts/NN_name.ipynb instead when it exists). Needs GITHUB_TOKEN (.env or environment) with gist access.")
+    parser.add_argument("--build-notebooks", action="store_true", help="Run every scripts/*.py into a code-only, executed scripts/NN_name.ipynb (for notebook Gists). Needs nbformat, nbclient, ipykernel and whatever the scripts import.")
     args = parser.parse_args()
 
     series = SeriesRepo(Path(__file__).resolve().parent)
@@ -730,6 +780,10 @@ def main() -> None:
         articles = series.all_articles()
         if not articles:
             sys.exit("No article-*/ folders found.")
+
+    if args.build_notebooks:
+        for article in articles:
+            article.build_notebooks()
 
     if args.sync_gists:
         if requests is None:

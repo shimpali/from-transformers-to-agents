@@ -10,10 +10,10 @@ I've spent plenty of time prompting these models without being able to explain w
 
 ## Series roadmap
 
-This is article 1 of an 11-part series that works from DeepLearning.AI courses and independent sources, grouped into four sections:
+This is article 1 of an 11-part series working through DeepLearning.AI's language model and agentic AI courses, grouped into four sections:
 
 1. **Foundation (understanding the basics)**: how transformer LLMs work (this article), prompting fundamentals, function-calling and data extraction.
-2. **Agentic AI deep dive (core patterns)**: agentic workflows, the four design patterns, reflection, tools and MCP.
+2. **Agentic AI deep dive (core patterns)**: agentic workflows, the four design patterns, reflection, tools, MCP and Agent Skills.
 3. **Orchestration (connecting it all)**: planning and multi-agent systems, evaluating agents for production, the A2A protocol.
 4. **Deployment & implementation (operating at scale)**: prompting multi-agent systems in practice.
 

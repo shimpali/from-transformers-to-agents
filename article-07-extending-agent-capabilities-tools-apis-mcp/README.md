@@ -1,6 +1,6 @@
-# Extending Agent Capabilities: Tools, APIs & MCP
+# Extending Agent Capabilities: Tools, APIs, MCP & Agent Skills
 
-Creating tools, connecting to external systems, code execution, Model Context Protocol.
+Creating tools, connecting to external systems, code execution, Model Context Protocol, Agent Skills.
 
 **Status: not started.**
 

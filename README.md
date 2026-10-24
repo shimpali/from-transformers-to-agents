@@ -3,6 +3,8 @@
 Code, notebooks, and article write-ups for my 11-part Medium series on language models and agentic AI, built from
 DeepLearning.AI courses and independent sources (engineering posts, papers, framework docs), written as a personal learning log rather than an expert take.
 
+**Read the series on Medium:** [From Transformers to Agents](https://medium.com/@shimpali.deshpande/list/from-transformers-to-agents-85c5cbaba687) (all published articles, in order).
+
 Each article gets its own numbered folder: a README with the full article text, a companion Jupyter
 notebook, the standalone scripts the notebook is built from, and the diagrams as SVGs. Each script
 under `scripts/` gets its own GitHub Gist, so a snippet can be embedded right where it's referenced
@@ -28,8 +30,8 @@ published Medium URLs as each one goes live.
 - **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/how-transformer-llms-work-544f04f4d294)
 
 ### Article 2: ["Prompting Fundamentals for LLMs"](article-02-prompting-fundamentals-for-llms/README.md)
-- Choosing between pretrained knowledge, search and deep research, context, sycophancy, rubric-based critique, multimodal prompting, tool selection
-- **Status:** Drafted, in review
+- Prompts as the start of a text, why every message re-sends the whole chat, context, a clear task with a checkable definition of done, letting the model think, knowledge cutoff vs search vs deep research, sycophancy and rubrics, images as tokens
+- **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/prompting-fundamentals-for-llms-getting-the-task-done-without-burning-your-usage-bb956a34a913)
 
 ### Article 3: ["Function-Calling and Data Extraction with LLMs"](article-03-function-calling-and-data-extraction-with-llms/README.md)
 - Making LLMs interface with external tools and data
@@ -51,8 +53,8 @@ published Medium URLs as each one goes live.
 - Why reflection beats direct generation, using external feedback, iterative improvement
 - **Status:** Not started
 
-### Article 7: ["Extending Agent Capabilities: Tools, APIs & MCP"](article-07-extending-agent-capabilities-tools-apis-mcp/README.md)
-- Creating tools, connecting to external systems, code execution, Model Context Protocol
+### Article 7: ["Extending Agent Capabilities: Tools, APIs, MCP & Agent Skills"](article-07-extending-agent-capabilities-tools-apis-mcp/README.md)
+- Creating tools, connecting to external systems, code execution, Model Context Protocol, Agent Skills (`SKILL.md`)
 - **Status:** Not started
 
 ---
