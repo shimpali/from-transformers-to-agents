@@ -14,7 +14,7 @@ Each concept below leans on something Article 1 already showed, and two small sc
 
 This is article 2 of an 11-part series that works from DeepLearning.AI courses and independent sources, grouped into four sections:
 
-1. **Foundation (understanding the basics)**: how transformer LLMs work, prompting fundamentals (this article), function-calling and data extraction.
+1. **Foundation (understanding the basics)**: [how transformer LLMs work](https://medium.com/@shimpali.deshpande/how-transformer-llms-work-544f04f4d294), prompting fundamentals (this article), function-calling and data extraction.
 2. **Agentic AI deep dive (core patterns)**: agentic workflows, the four design patterns, reflection, tools, MCP and Agent Skills.
 3. **Orchestration (connecting it all)**: planning and multi-agent systems, evaluating agents for production, the A2A protocol.
 4. **Deployment & implementation (operating at scale)**: prompting multi-agent systems in practice.
