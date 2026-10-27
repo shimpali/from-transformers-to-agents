@@ -8,9 +8,7 @@ DeepLearning.AI courses and independent sources (engineering posts, papers, fram
 Each article gets its own numbered folder: a README with the full article text, a companion Jupyter
 notebook, the standalone scripts the notebook is built from, and the diagrams as SVGs. Each script
 under `scripts/` gets its own GitHub Gist, so a snippet can be embedded right where it's referenced
-in the article rather than as one big code dump. The layout follows
-[HandsOnLLM/Hands-On-Large-Language-Models](https://github.com/HandsOnLLM/Hands-On-Large-Language-Models),
-adapted from numbered chapters to numbered articles.
+in the article rather than as one big code dump.
 
 `main.py` at the repo root automates the mechanical parts of getting an article from this repo onto
 Medium: pushing each snippet's Gist and generating paste-ready HTML. See
@@ -18,66 +16,61 @@ Medium: pushing each snippet's Gist and generating paste-ready HTML. See
 
 ## Complete Series Plan (11 Articles)
 
-Article titles link to each article's file in this repo for now. They'll be swapped for the
-published Medium URLs as each one goes live.
+### Section 1: Foundation (Understanding the Basics)
 
----
-
-## Section 1: Foundation (Understanding the Basics)
-
-### Article 1: ["How Transformer LLMs Work"](article-01-how-transformer-llms-work/README.md)
+#### Article 1: ["How Transformer LLMs Work"](article-01-how-transformer-llms-work/README.md)
 - Tokenization, embeddings, attention, transformer blocks
 - **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/how-transformer-llms-work-544f04f4d294)
 
-### Article 2: ["Prompting Fundamentals for LLMs"](article-02-prompting-fundamentals-for-llms/README.md)
+#### Article 2: ["Prompting Fundamentals for LLMs"](article-02-prompting-fundamentals-for-llms/README.md)
 - Prompts as the start of a text, why every message re-sends the whole chat, context, a clear task with a checkable definition of done, letting the model think, knowledge cutoff vs search vs deep research, sycophancy and rubrics, images as tokens
 - **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/prompting-fundamentals-for-llms-getting-the-task-done-without-burning-your-usage-bb956a34a913)
 
-### Article 3: ["Function-Calling and Data Extraction with LLMs"](article-03-function-calling-and-data-extraction-with-llms/README.md)
+#### Article 3: ["Function-Calling and Data Extraction with LLMs"](article-03-function-calling-and-data-extraction-with-llms/README.md)
 - Making LLMs interface with external tools and data
 - **Status:** Not started
 
 ---
 
-## Section 2: Agentic AI Deep Dive (Core Patterns)
+### Section 2: Agentic AI Deep Dive (Core Patterns)
 
-### Article 4: ["Building Agentic AI Workflows"](article-04-building-agentic-ai-workflows/README.md)
+#### Article 4: ["Building Agentic AI Workflows"](article-04-building-agentic-ai-workflows/README.md)
 - What is agentic AI, degrees of autonomy, applications, task decomposition
 - **Status:** Not started
 
-### Article 5: ["The Four Design Patterns of Agentic AI"](article-05-the-four-design-patterns-of-agentic-ai/README.md)
+#### Article 5: ["The Four Design Patterns of Agentic AI"](article-05-the-four-design-patterns-of-agentic-ai/README.md)
 - Overview of Reflection, Tool Use, Planning, Multi-Agent patterns
 - **Status:** Not started
 
-### Article 6: ["Reflection in AI: Teaching Agents to Critique Themselves"](article-06-reflection-in-ai/README.md)
+#### Article 6: ["Reflection in AI: Teaching Agents to Critique Themselves"](article-06-reflection-in-ai/README.md)
 - Why reflection beats direct generation, using external feedback, iterative improvement
 - **Status:** Not started
 
-### Article 7: ["Extending Agent Capabilities: Tools, APIs, MCP & Agent Skills"](article-07-extending-agent-capabilities-tools-apis-mcp/README.md)
+#### Article 7: ["Extending Agent Capabilities: Tools, APIs, MCP & Agent Skills"](article-07-extending-agent-capabilities-tools-apis-mcp/README.md)
 - Creating tools, connecting to external systems, code execution, Model Context Protocol, Agent Skills (`SKILL.md`)
 - **Status:** Not started
 
 ---
 
-## Section 3: Orchestration (Connecting It All)
+### Section 3: Orchestration (Connecting It All)
 
-### Article 8: ["Advanced Autonomy: Planning and Multi-Agent Systems"](article-08-advanced-autonomy-planning-and-multi-agent-systems/README.md)
+#### Article 8: ["Advanced Autonomy: Planning and Multi-Agent Systems"](article-08-advanced-autonomy-planning-and-multi-agent-systems/README.md)
 - Task planning, adaptive workflows, multi-agent orchestration, communication patterns
 - **Status:** Not started
 
-### Article 9: ["Evaluating and Optimizing Agents for Production"](article-09-evaluating-and-optimizing-agents-for-production/README.md)
+#### Article 9: ["Evaluating and Optimizing Agents for Production"](article-09-evaluating-and-optimizing-agents-for-production/README.md)
 - Building evals, error analysis, cost/latency optimization, production readiness
 - **Status:** Not started
 
-### Article 10: ["The A2A Protocol: Connecting AI Agents"](article-10-the-a2a-protocol/README.md)
+#### Article 10: ["The A2A Protocol: Connecting AI Agents"](article-10-the-a2a-protocol/README.md)
 - Agent discovery, client-server architecture, orchestrating multi-agent workflows across frameworks
 - **Status:** Not started
 
 ---
 
-## Section 4: Deployment & Implementation (Operating at Scale)
+### Section 4: Deployment & Implementation (Operating at Scale)
 
-### Article 11: ["Prompting Multi-Agent Systems: A2A Workflows in Practice"](article-11-prompting-multi-agent-systems/README.md)
+#### Article 11: ["Prompting Multi-Agent Systems: A2A Workflows in Practice"](article-11-prompting-multi-agent-systems/README.md)
 - Instructing orchestrated agents, system design for distributed systems, real-world patterns
 - **Status:** Not started
 
@@ -93,10 +86,10 @@ published Medium URLs as each one goes live.
 ### Course References
 
 - [How Transformer LLMs Work](https://www.deeplearning.ai/courses/how-transformer-llms-work)
+- [AI Prompting for Everyone](https://www.deeplearning.ai/courses/ai-prompting-for-everyone)
 - [Function-Calling and Data Extraction with LLMs](https://www.deeplearning.ai/courses/function-calling-and-data-extraction-with-llms)
 - [Agentic AI](https://www.deeplearning.ai/courses/agentic-ai)
 - [A2A: The Agent2Agent Protocol](https://www.deeplearning.ai/courses/a2a-the-agent2agent-protocol)
-- [AI Prompting for Everyone](https://www.deeplearning.ai/courses/ai-prompting-for-everyone)
 
 ## Folder layout
 
@@ -170,8 +163,7 @@ python3 main.py article-01-how-transformer-llms-work
 3. Create a token at [github.com/settings/tokens](https://github.com/settings/tokens): a classic
    token needs the **gist** scope; a fine-grained token needs the account-level **Gists** permission
    set to read and write.
-4. Copy `.env.example` to `.env` and paste the token in as `GITHUB_TOKEN=...`. `.env` is gitignored,
-   so it never gets committed.
+4. Copy `.env.example` to `.env` and paste the token in as `GITHUB_TOKEN=...`.
 
 ### Getting the HTML onto Medium
 
