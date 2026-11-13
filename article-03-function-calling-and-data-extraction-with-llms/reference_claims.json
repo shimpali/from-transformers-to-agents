@@ -1,0 +1,53 @@
+{
+  "_note": "Reference claims written from each paper's abstract (read in the cached PDF text on 2026-11-10). A claim counts as found when one extracted claim matches every pattern in 'facts' (case-insensitive regex, searched in claim + expected_result). Crude on purpose: a model judge replaces it in Article 9.",
+  "2310.13548": [
+    {"claim": "Five AI assistants show sycophancy across four free-form text-generation tasks", "facts": ["five|\\b5\\b", "four|\\b4\\b", "sycophan"]},
+    {"claim": "Responses that match a user's views are more likely to be preferred", "facts": ["match|agree|align", "prefer"]},
+    {"claim": "Humans and preference models sometimes prefer convincing sycophantic responses over correct ones", "facts": ["sycophan", "correct|truthful"]}
+  ],
+  "2408.02442": [
+    {"claim": "Format restrictions cause a significant decline in reasoning ability", "facts": ["decline|degrad|drop|lower|worse|reduc", "reasoning"]},
+    {"claim": "Stricter format constraints generally cause greater degradation on reasoning tasks", "facts": ["strict", "degrad|decline|worse|drop|reduc"]},
+    {"claim": "Structured formats such as JSON or XML are compared with free-form responses", "facts": ["JSON|XML", "free"]}
+  ],
+  "2501.10868": [
+    {"claim": "JSONSchemaBench contains 10K real-world JSON schemas", "facts": ["10K|10,000|10 000|10k"]},
+    {"claim": "Six constrained decoding frameworks are evaluated", "facts": ["six|\\b6\\b", "framework"]},
+    {"claim": "Constrained decoding is assessed on efficiency, coverage and output quality", "facts": ["efficien", "coverage", "quality"]}
+  ],
+  "2303.11366": [
+    {"claim": "Reflexion reaches 91% pass@1 on HumanEval", "facts": ["91", "HumanEval"]},
+    {"claim": "The previous state of the art, GPT-4, reaches 80% on HumanEval", "facts": ["80", "GPT-?4"]},
+    {"claim": "Agents improve through linguistic feedback, not weight updates", "facts": ["feedback|reflect|verbal|linguistic", "weight|fine-?tun|updat"]}
+  ],
+  "2303.17651": [
+    {"claim": "Self-Refine improves task performance by about 20% absolute on average", "facts": ["20"]},
+    {"claim": "It is evaluated across 7 tasks", "facts": ["seven|\\b7\\b", "task"]},
+    {"claim": "One LLM generates, gives feedback and refines, with no extra training", "facts": ["same|single|one|itself", "feedback"]}
+  ],
+  "2302.04761": [
+    {"claim": "Toolformer learns which APIs to call, when, and with what arguments", "facts": ["API|tool", "when|which|argument"]},
+    {"claim": "Its tools include a calculator, Q&A system, search engine, translation system and calendar", "facts": ["calculator", "calendar"]},
+    {"claim": "It improves zero-shot performance and is competitive with much larger models", "facts": ["zero-?shot", "larger"]}
+  ],
+  "2210.03629": [
+    {"claim": "ReAct beats imitation and reinforcement learning on ALFWorld by 34% absolute success", "facts": ["34", "ALFWorld"]},
+    {"claim": "ReAct beats them on WebShop by 10% absolute success", "facts": ["10", "WebShop"]},
+    {"claim": "ReAct interleaves reasoning traces with actions", "facts": ["interleav|alternat|combin", "reason", "action"]}
+  ],
+  "2201.11903": [
+    {"claim": "PaLM 540B prompted with eight chain-of-thought exemplars", "facts": ["540B", "eight|\\b8\\b"]},
+    {"claim": "It reaches state-of-the-art accuracy on GSM8K, surpassing finetuned GPT-3 with a verifier", "facts": ["GSM8K", "verifier|fine-?tuned"]},
+    {"claim": "Reasoning abilities emerge in sufficiently large models", "facts": ["large|scale", "emerg"]}
+  ],
+  "1706.03762": [
+    {"claim": "The Transformer reaches 28.4 BLEU on WMT 2014 English-to-German", "facts": ["28\\.4"]},
+    {"claim": "It reaches 41.8 BLEU on WMT 2014 English-to-French", "facts": ["41\\.8"]},
+    {"claim": "The English-to-French model trained for 3.5 days on eight GPUs", "facts": ["3\\.5", "eight|\\b8\\b"]}
+  ],
+  "2307.03172": [
+    {"claim": "Performance degrades when relevant information is in the middle of a long context", "facts": ["middle", "degrad|drop|worse|lower|decline"]},
+    {"claim": "Performance is often highest when relevant information is at the beginning or end", "facts": ["beginning", "end"]},
+    {"claim": "The tasks are multi-document question answering and key-value retrieval", "facts": ["multi-?document", "key-?value"]}
+  ]
+}

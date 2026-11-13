@@ -1,0 +1,460 @@
+{
+ "model": "granite4.2:3b",
+ "think": null,
+ "rows": [
+  {
+   "paper": "2310.13548",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2310.13548"
+     },
+     "result_start": "Paper 2310.13548 fetched (115194 characters). Sections: Start; 1 I NTRODUCTION; 2 B ACKGROUND : AI A SSISTANTS AND SYCOP"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2310.13548",
+      "name": "1 I NTRODUCTION"
+     },
+     "result_start": "AI assistants are typically trained to produce outputs that humans rate highly, e.g., with reinforce-\nment learning from"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 3572,
+   "tokens_out": 6274,
+   "secs": 147.5,
+   "claims": [],
+   "ended": "answer cut off by the token cap",
+   "read_ok": true,
+   "found": 0,
+   "success": false
+  },
+  {
+   "paper": "2408.02442",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2408.02442"
+     },
+     "result_start": "Paper 2408.02442 fetched (56560 characters). Sections: Start; Abstract; 1 Introduction; 2. For the 5 hours of overtime, "
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2408.02442",
+      "name": "Abstract"
+     },
+     "result_start": "Structured generation, the process of producing\ncontent in standardized formats like JSON and\nXML, is widely utilized in"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2418,
+   "tokens_out": 2387,
+   "secs": 48.3,
+   "claims": [
+    {
+     "claim": "We evaluate LLMs\u2019 performance when restricted to adhere to structured formats versus generating free-form responses across various common tasks.",
+     "how_to_test": "Reproduce the evaluation protocol described in the paper: run the same set of common tasks (e.g., reasoning, classification) with LLMs using both structured format constraints and free-form generation, and collect performance metrics (e.g., accuracy, correctness).",
+     "expected_result": "The evaluation yields performance differences that match the reported results (structured format vs free-form)."
+    },
+    {
+     "claim": "We observe a significant decline in LLMs\u2019 reasoning abilities under format restrictions.",
+     "how_to_test": "Perform the evaluation described above and compute reasoning performance (e.g., task accuracy) for the structured format condition. Compare this metric to the free-form baseline.",
+     "expected_result": "The structured format condition shows lower reasoning performance than the free-form condition, indicating a decline (as observed)."
+    },
+    {
+     "claim": "Stricter format constraints generally lead to greater performance degradation in reasoning tasks.",
+     "how_to_test": "Extend the evaluation to include multiple levels of format constraints (e.g., loose, medium, strict) and measure reasoning performance for each level. Compare the degradation across levels.",
+     "expected_result": "Stricter constraints produce more degradation in reasoning performance compared to looser constraints."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2501.10868",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2501.10868"
+     },
+     "result_start": "Paper 2501.10868 fetched (69515 characters). Sections: Start; Abstract; 1 Introduction; 2 Background and Related Work; 3"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2501.10868",
+      "name": "Abstract"
+     },
+     "result_start": "Reliably generating structured outputs has become a critical capability\nfor modern language model (LM) applications. Con"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2357,
+   "tokens_out": 2388,
+   "secs": 46.7,
+   "claims": [
+    {
+     "claim": "JSONSchemaBench comprises 10K real-world JSON schemas that encompass a wide range of constraints with varying complexity.",
+     "how_to_test": "Count the number of schemas in the released benchmark and verify that they cover diverse constraints with varying complexity.",
+     "expected_result": "The benchmark contains exactly 10,000 schemas and the constraints vary in complexity as described."
+    },
+    {
+     "claim": "We pair the benchmark with the existing official JSON Schema Test Suite and evaluate six state-of-the-art constrained decoding frameworks, including Guidance, Outlines, Llamacpp, XGrammar, OpenAI, and Gem-ini.",
+     "how_to_test": "Check that the evaluation protocol explicitly uses the official JSON Schema Test Suite and includes all six listed frameworks.",
+     "expected_result": "All six frameworks are evaluated using the official JSON Schema Test Suite."
+    },
+    {
+     "claim": "Through extensive experiments, we find that JSONSchemaBench presents a significant challenge for both LLMs and constrained decoding frameworks.",
+     "how_to_test": "Run the experiments described in the paper and compute performance metrics (e.g., constraint compliance rate, output quality). If the results show a significant challenge, the claim holds.",
+     "expected_result": "Performance metrics indicate a significant challenge (e.g., low compliance rate, high error rate) for both LLMs and constrained decoding frameworks."
+    },
+    {
+     "claim": "We release JSONSchemaBench at https://github.com/guidance-ai/jsonschemabench.",
+     "how_to_test": "Verify that the URL leads to a publicly accessible repository containing the benchmark data.",
+     "expected_result": "Accessing the URL returns a repository with the benchmark files."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2303.11366",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2303.11366"
+     },
+     "result_start": "Paper 2303.11366 fetched (59439 characters). Sections: Start; Abstract; 1 Introduction; 2 Related work; 3 Reflexion: rei"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2303.11366",
+      "name": "Abstract"
+     },
+     "result_start": "Large language models (LLMs) have been increasingly used to interact with exter-\nnal environments (e.g., games, compiler"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2320,
+   "tokens_out": 1834,
+   "secs": 35.4,
+   "claims": [
+    {
+     "claim": "Reflexion achieves 91% pass@1 accuracy on the HumanEval coding benchmark.",
+     "how_to_test": "Run the Reflexion demo on the HumanEval benchmark and compute the pass@1 accuracy metric.",
+     "expected_result": "\u2265 91%"
+    },
+    {
+     "claim": "Reflexion surpasses the previous state-of-the-art GPT-4 on HumanEval coding benchmark, which achieves 80% pass@1 accuracy.",
+     "how_to_test": "Evaluate GPT-4 on HumanEval and compare its pass@1 accuracy with Reflexion's.",
+     "expected_result": "Reflexion's pass@1 accuracy > 80% (i.e., at least 81%)."
+    },
+    {
+     "claim": "Reflexion is flexible enough to incorporate various types (scalar values or free-form language) and sources (external or internally simulated) of feedback signals.",
+     "how_to_test": "Check the Reflexion framework's configuration to see if it supports scalar values, free-form language, external feedback, and internal simulated feedback.",
+     "expected_result": "The framework supports all listed types and sources."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2303.17651",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2303.17651"
+     },
+     "result_start": "Paper 2303.17651 fetched (124985 characters). Sections: Start; Abstract; 1 Introduction; 2 Iterative Refinement with S E"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2303.17651",
+      "name": "Abstract"
+     },
+     "result_start": "Like humans, large language models ( LLM s) do not always generate the best\noutput on their first try. Motivated by how "
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2277,
+   "tokens_out": 1844,
+   "secs": 36.9,
+   "claims": [
+    {
+     "claim": "SELF -REFINE does not require any supervised training data, additional training, or reinforcement learning, and instead uses a single LLM as the generator, refiner, and feedback provider.",
+     "how_to_test": "Inspect the implementation or logs to confirm that no external training dataset is loaded or used; verify that the method relies solely on the LLM's parameters for generation, feedback, and refinement.",
+     "expected_result": "No external training data is present; the method runs without loading any supervised training data, additional training, or reinforcement learning."
+    },
+    {
+     "claim": "Across all evaluated tasks, outputs generated with SELF -REFINE are preferred by humans and automatic metrics over those generated with the same LLM using conventional one-step generation, improving by \u223c20% absolute on average in task performance.",
+     "how_to_test": "Run SELF -REFINE on the 7 diverse tasks (dialog response generation, mathematical reasoning, etc.) using the same LLM (GPT-3.5 and GPT-4) as baseline. Collect human preference judgments and automatic metric scores for both SELF -REFINE outputs and conventional one-step generation outputs. Compute the average absolute improvement across tasks.",
+     "expected_result": "The average absolute improvement in task performance (as measured by human preference or automatic metrics) is at least 20% improvement compared to conventional one-step generation."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2302.04761",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2302.04761"
+     },
+     "result_start": "Paper 2302.04761 fetched (71962 characters). Sections: Start; Abstract; 1 Introduction; 2 Approach; 3 Tools; 4 Experimen"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2302.04761",
+      "name": "Abstract"
+     },
+     "result_start": "Language models (LMs) exhibit remarkable\nabilities to solve new tasks from just a few\nexamples or textual instructions, "
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2388,
+   "tokens_out": 1867,
+   "secs": 41.300000000000004,
+   "claims": [
+    {
+     "claim": "LMs can teach themselves to use external tools via simple APIs.",
+     "how_to_test": "Run the Toolformer model on a set of tasks that require tool calls (e.g., arithmetic, QA, translation, calendar) and verify that it correctly selects the appropriate API and produces correct outputs.",
+     "expected_result": "The model successfully uses the defined tools (calculator, search engine, translation system, calendar) to produce correct answers on provided examples."
+    },
+    {
+     "claim": "Toolformer achieves substantially improved zero-shot performance across a variety of downstream tasks, often competitive with much larger models, without sacrificing its core language modeling abilities.",
+     "how_to_test": "Evaluate Toolformer on downstream tasks (e.g., LAMA, math problems, QA, multilingual QA, temporal datasets) using zero-shot prompting, and compare its accuracy to baseline large language models. Also evaluate its language modeling performance on a standard LM benchmark (e.g., perplexity).",
+     "expected_result": "Toolformer's zero-shot accuracy on at least one downstream task is substantially higher than baseline LMs, and its language modeling perplexity is within the same range as baseline models."
+    },
+    {
+     "claim": "Toolformer requires only a handful of demonstrations per API.",
+     "how_to_test": "Measure the number of API demonstration examples required for Toolformer to achieve the claimed performance; test with 1, 2, 5, and 10 demonstrations per API and observe when performance stabilizes.",
+     "expected_result": "With as few as 5 demonstrations per API, Toolformer achieves the claimed performance level (e.g., zero-shot accuracy above threshold)."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2210.03629",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2210.03629"
+     },
+     "result_start": "Paper 2210.03629 fetched (110119 characters). Sections: Start; 1 I NTRODUCTION; 2 REAC T: S YNERGIZING REASONING + AC TI"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2210.03629",
+      "name": "Start"
+     },
+     "result_start": "Published as a conference paper at ICLR 2023\nREAC T: S YNERGIZING REASONING AND ACTING IN\nLANGUAGE MODELS\nShunyu Yao\u2217*,1"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2485,
+   "tokens_out": 2839,
+   "secs": 56.0,
+   "claims": [
+    {
+     "claim": "ReAct achieves an absolute success rate of 34% on ALFWorld.",
+     "how_to_test": "Run ReAct on the ALFWorld interactive decision making benchmark using the interleaved reasoning and action generation method (one or two in-context examples). Compute the success rate (percentage of tasks completed successfully). Expected result: The success rate is at least 34%.",
+     "expected_result": "Success rate \u2265 34%"
+    },
+    {
+     "claim": "ReAct achieves an absolute success rate of 10% on WebShop.",
+     "how_to_test": "Run ReAct on the WebShop interactive decision making benchmark using the interleaved reasoning and action generation method (one or two in-context examples). Compute the success rate. Expected result: The success rate is at least 10%.",
+     "expected_result": "Success rate \u2265 10%"
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  },
+  {
+   "paper": "2201.11903",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2201.11903"
+     },
+     "result_start": "Paper 2201.11903 fetched (135737 characters). Sections: Start; Abstract; 1 Introduction; 2 Chain-of-Thought Prompting; 3"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2201.11903",
+      "name": "Abstract"
+     },
+     "result_start": "We explore how generating a chain of thought\u2014a series of intermediate reasoning\nsteps\u2014signi\ufb01cantly improves the ability "
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2690,
+   "tokens_out": 5846,
+   "secs": 128.20000000000002,
+   "claims": [
+    {
+     "claim": "Chain-of-thought prompting improves performance on arithmetic, commonsense, and symbolic reasoning tasks compared to standard prompting.",
+     "how_to_test": "Run experiments on benchmark datasets (e.g., GSM8K for arithmetic, a commonsense dataset, and a symbolic reasoning dataset) using both chain-of-thought and standard prompting, and compare performance metrics (accuracy, F1, etc.).",
+     "expected_result": "Chain-of-thought yields higher performance than standard prompting on all tasks."
+    },
+    {
+     "claim": "For PaLM 540B, using eight chain-of-thought exemplars achieves state-of-the-art accuracy on GSM8K.",
+     "how_to_test": "Implement chain-of-thought prompting with eight exemplars on PaLM 540B on GSM8K, compute accuracy, and compare to the reported state-of-the-art accuracy.",
+     "expected_result": "Accuracy meets or exceeds the state-of-the-art threshold (e.g., >95% or the specific state-of-the-art accuracy reported)."
+    },
+    {
+     "claim": "The chain-of-thought reasoning yields the correct answer (9) for the cafeteria apples example.",
+     "how_to_test": "Evaluate the model's output using chain-of-thought prompting on the cafeteria apples example (Q: The cafeteria had 23 apples...); expected answer is 9.",
+     "expected_result": "The model's answer is exactly 9."
+    },
+    {
+     "claim": "The chain-of-thought reasoning yields the correct answer (27) for the cafeteria apples example.",
+     "how_to_test": "Evaluate the model's output using chain-of-thought prompting on the cafeteria apples example (Q: The cafeteria had 23 apples...); expected answer is 27.",
+     "expected_result": "The model's answer is exactly 27."
+    },
+    {
+     "claim": "The chain-of-thought reasoning yields the correct answer (11) for Roger's tennis balls example.",
+     "how_to_test": "Evaluate the model's output using chain-of-thought prompting on Roger's tennis balls example (Q: Roger has 5 tennis balls...); expected answer is 11.",
+     "expected_result": "The model's answer is exactly 11."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 1,
+   "success": true
+  },
+  {
+   "paper": "1706.03762",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "1706.03762"
+     },
+     "result_start": "Paper 1706.03762 fetched (39510 characters). Sections: Start; Abstract; 1 Introduction; 2 Background; 3 Model Architectu"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "1706.03762",
+      "name": "Abstract"
+     },
+     "result_start": "The dominant sequence transduction models are based on complex recurrent or\nconvolutional neural networks that include a"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2651,
+   "tokens_out": 2322,
+   "secs": 45.9,
+   "claims": [
+    {
+     "claim": "The Transformer achieves 28.4 BLEU on the WMT 2014 English-to-German translation task.",
+     "how_to_test": "Train the Transformer on the WMT 2014 English-to-German translation task and compute the BLEU score; verify that the score equals 28.4.",
+     "expected_result": "28.4"
+    },
+    {
+     "claim": "The Transformer achieves a new single-model state-of-the-art BLEU score of 41.8 on the WMT 2014 English-to-French translation task after training for 3.5 days on eight GPUs.",
+     "how_to_test": "Train the Transformer on the WMT 2014 English-to-French translation task using the same training schedule (3.5 days on eight GPUs) and compute the BLEU score; verify that the score equals 41.8.",
+     "expected_result": "41.8"
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 3,
+   "success": true
+  },
+  {
+   "paper": "2307.03172",
+   "calls": [
+    {
+     "tool": "fetch_arxiv_sections",
+     "args": {
+      "arxiv_id": "2307.03172"
+     },
+     "result_start": "Paper 2307.03172 fetched (65453 characters). Sections: Start; Abstract; 1 Introduction; 2 Multi-Document Question Answer"
+    },
+    {
+     "tool": "get_section",
+     "args": {
+      "arxiv_id": "2307.03172",
+      "name": "Abstract"
+     },
+     "result_start": "While recent language models have the abil-\nity to take long contexts as input, relatively\nlittle is known about how wel"
+    }
+   ],
+   "tool_errors": 0,
+   "retries": 0,
+   "model_calls": 3,
+   "tokens_in": 2367,
+   "tokens_out": 2304,
+   "secs": 44.199999999999996,
+   "claims": [
+    {
+     "claim": "Performance degrades significantly when relevant information is moved from the beginning or end to the middle of the input context.",
+     "how_to_test": "For each model, generate input contexts where relevant information is placed at the beginning, at the end, and in the middle. Evaluate the model's performance (e.g., accuracy or F1) on the two tasks (multi-document QA and key-value retrieval) for each position. Compare the performance metrics across positions.",
+     "expected_result": "The performance metric will be substantially lower when the relevant information is in the middle compared to when it is at the beginning or end."
+    },
+    {
+     "claim": "Performance is often highest when relevant information occurs at the beginning or end of the input context.",
+     "how_to_test": "Same as above: evaluate performance for each position and identify which position yields the highest metric. Repeat across multiple random contexts to confirm robustness.",
+     "expected_result": "The highest performance metric is achieved when relevant information is at the beginning or end; performance drops when information is elsewhere."
+    },
+    {
+     "claim": "Performance significantly degrades when models must access relevant information in the middle of long contexts, even for explicitly long-context models.",
+     "how_to_test": "Create long input contexts (e.g., multiple documents or long passages) and ensure relevant information is positioned in the middle. Run the models on these contexts and measure performance. Compare with contexts where information is at the beginning or end.",
+     "expected_result": "Performance metric will be significantly lower (e.g., drop of at least 10 percentage points) when information is in the middle compared to when it is at the beginning or end."
+    }
+   ],
+   "ended": "answered",
+   "read_ok": true,
+   "found": 2,
+   "success": true
+  }
+ ]
+}

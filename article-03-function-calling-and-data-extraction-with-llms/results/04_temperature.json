@@ -1,0 +1,202 @@
+{
+ "model": "granite4.2:3b",
+ "rows": [
+  {
+   "paper": "1706.03762",
+   "temp": 0.0,
+   "valid_first_try": 5,
+   "mean_found": 3.0,
+   "agree": 5,
+   "distinct": 1,
+   "mean_tokens_out": 1448.0,
+   "sets": [
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ]
+   ]
+  },
+  {
+   "paper": "1706.03762",
+   "temp": 1.0,
+   "valid_first_try": 5,
+   "mean_found": 2.8,
+   "agree": 4,
+   "distinct": 5,
+   "mean_tokens_out": 2298.8,
+   "sets": [
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1,
+     2
+    ],
+    [
+     0,
+     1,
+     2
+    ]
+   ]
+  },
+  {
+   "paper": "2210.03629",
+   "temp": 0.0,
+   "valid_first_try": 5,
+   "mean_found": 2.0,
+   "agree": 5,
+   "distinct": 2,
+   "mean_tokens_out": 2794.8,
+   "sets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "paper": "2210.03629",
+   "temp": 1.0,
+   "valid_first_try": 5,
+   "mean_found": 2.0,
+   "agree": 5,
+   "distinct": 5,
+   "mean_tokens_out": 2621.8,
+   "sets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "paper": "2303.11366",
+   "temp": 0.0,
+   "valid_first_try": 5,
+   "mean_found": 1.8,
+   "agree": 4,
+   "distinct": 2,
+   "mean_tokens_out": 1715.2,
+   "sets": [
+    [
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ]
+  },
+  {
+   "paper": "2303.11366",
+   "temp": 1.0,
+   "valid_first_try": 5,
+   "mean_found": 1.8,
+   "agree": 4,
+   "distinct": 5,
+   "mean_tokens_out": 2464.0,
+   "sets": [
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0
+    ],
+    [
+     0,
+     1
+    ],
+    [
+     0,
+     1
+    ]
+   ]
+  }
+ ],
+ "same_seed_distinct": {
+  "2210.03629": 2,
+  "2303.11366": 2
+ }
+}

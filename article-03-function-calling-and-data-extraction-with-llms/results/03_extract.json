@@ -1,0 +1,135 @@
+{
+ "model": "granite4.2:3b",
+ "rows": [
+  {
+   "paper": "2310.13548",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    true
+   ],
+   "tokens_in": 299,
+   "tokens_out": 1881,
+   "secs": 37.4,
+   "tries": 1
+  },
+  {
+   "paper": "2408.02442",
+   "valid": true,
+   "hits": [
+    true,
+    false,
+    false
+   ],
+   "tokens_in": 230,
+   "tokens_out": 1676,
+   "secs": 31.3,
+   "tries": 1
+  },
+  {
+   "paper": "2501.10868",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    true
+   ],
+   "tokens_in": 366,
+   "tokens_out": 2150,
+   "secs": 40.4,
+   "tries": 1
+  },
+  {
+   "paper": "2303.11366",
+   "valid": true,
+   "hits": [
+    true,
+    false,
+    false
+   ],
+   "tokens_in": 361,
+   "tokens_out": 1652,
+   "secs": 30.6,
+   "tries": 1
+  },
+  {
+   "paper": "2303.17651",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    true
+   ],
+   "tokens_in": 328,
+   "tokens_out": 1599,
+   "secs": 29.4,
+   "tries": 1
+  },
+  {
+   "paper": "2302.04761",
+   "valid": true,
+   "hits": [
+    true,
+    false,
+    false
+   ],
+   "tokens_in": 282,
+   "tokens_out": 3275,
+   "secs": 62.3,
+   "tries": 1
+  },
+  {
+   "paper": "2210.03629",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    false
+   ],
+   "tokens_in": 370,
+   "tokens_out": 2370,
+   "secs": 44.1,
+   "tries": 1
+  },
+  {
+   "paper": "2201.11903",
+   "valid": true,
+   "hits": [
+    true,
+    false,
+    false
+   ],
+   "tokens_in": 236,
+   "tokens_out": 2048,
+   "secs": 37.5,
+   "tries": 1
+  },
+  {
+   "paper": "1706.03762",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    true
+   ],
+   "tokens_in": 298,
+   "tokens_out": 1448,
+   "secs": 26.4,
+   "tries": 1
+  },
+  {
+   "paper": "2307.03172",
+   "valid": true,
+   "hits": [
+    true,
+    true,
+    true
+   ],
+   "tokens_in": 250,
+   "tokens_out": 1492,
+   "secs": 27.1,
+   "tries": 1
+  }
+ ]
+}

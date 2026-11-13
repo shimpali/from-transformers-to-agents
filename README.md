@@ -28,7 +28,7 @@ Medium: pushing each snippet's Gist and generating paste-ready HTML. See
 
 #### Article 3: ["Function-Calling and Data Extraction with LLMs"](article-03-function-calling-and-data-extraction-with-llms/README.md)
 - Making LLMs interface with external tools and data
-- **Status:** Not started
+- **Status:** Published on [Medium](https://medium.com/@shimpali.deshpande/function-calling-and-data-extraction-with-llms-what-the-model-sees-and-how-far-to-trust-what-50d937acdb30)
 
 ---
 

@@ -1,6 +1,6 @@
 """Builds the series diagrams (flat dark card style) into each article's images/ folder.
 
-    python3 diagrams/build.py            # all ten
+    python3 diagrams/build.py            # all
     python3 diagrams/build.py a1_07      # one
 Needs: pip install fonttools pillow playwright (and playwright install chromium).
 Fonts: Nunito (SIL OFL) static instances live in diagrams/fonts/ and are subset + embedded in each SVG.
@@ -14,6 +14,7 @@ from fc import *
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 A1 = os.path.join(ROOT, 'article-01-how-transformer-llms-work', 'images')
 A2 = os.path.join(ROOT, 'article-02-prompting-fundamentals-for-llms', 'images')
+A3 = os.path.join(ROOT, 'article-03-function-calling-and-data-extraction-with-llms', 'images')
 CAPTIONS = {}
 
 
@@ -382,10 +383,136 @@ def a2_03():
     return d.save(A2, '03-know-or-look-up', ylow + bh + 24)
 
 
+# ------------------------------------------------------------------ Article 3
+def a3_01():
+    d = Diagram('The model asks, your code runs', 'A function call is a request the model writes and your own program carries out.',
+                'Four cards: your request and the tool definitions go in as text; the model writes a request with a function name and arguments; your own code runs the function; the result goes back and the model answers or asks again. A loop arrow shows the repeat until the model answers, or a step cap stops it.',
+                bar='sand')
+
+    def s1(d, cx, sy, k):
+        w, h, g = 210, 42, 14
+        d.chip(cx - w / 2, sy - h - g / 2, w, h, k, 'Tool definitions', 'outline')
+        d.chip(cx - w / 2, sy + g / 2, w, h, k, 'Your request', 'solid')
+
+    def s2(d, cx, sy, k):
+        w, h, g = 230, 42, 14
+        d.chip(cx - w / 2, sy - h - g / 2, w, h, k, 'get_section', 'solid')
+        d.chip(cx - w / 2, sy + g / 2, w, h, k, 'arxiv_id, name', 'outline')
+
+    def s3(d, cx, sy, k):
+        d.block(cx - 108, sy - 40, 216, 80, k, 'Your code', 'runs get_section()', fs=20, subfs=15)
+
+    def s4(d, cx, sy, k):
+        w, h, g = 210, 42, 14
+        d.chip(cx - w / 2, sy - h - g / 2, w, h, k, 'Tool result', 'dim')
+        d.chip(cx - w / 2, sy + g / 2, w, h, k, 'Answer text', 'solid')
+
+    steps = [(1, 'ASK', 'Tools plus request', 'definitions are prompt text', '“What does the model read?”', 'blue'),
+             (2, 'WRITE', 'Model picks a tool', 'it writes a name and arguments', '“What does the model write?”', 'sand'),
+             (3, 'RUN', 'Your code runs it', 'the function is in your code', '“Who runs the function?”', 'sage'),
+             (4, 'REPLY', 'Result goes back', 'then it answers or asks again', '“Done, or call again?”', 'teal')]
+    xs, top, bot = d.step_cards(steps, 275, 44, [s1, s2, s3, s4])
+    x1, x4 = xs[0] + 137.5, xs[3] + 137.5
+    yb = bot + 64
+    d.arrow([(x4, bot + 1), (x4, yb), (x1, yb), (x1, bot + 3)], r=26)
+    d.pill((x1 + x4) / 2, yb, 'repeat until the model answers, or a step cap stops it', 18, 44)
+    CAPTIONS['a3/01-model-asks-code-runs'] = 'The model never runs anything. It writes a request, and your code does the calling.'
+    return d.save(A3, '01-model-asks-code-runs', bot + 110)
+
+
+def a3_02():
+    d = Diagram('A tool definition is text in the prompt', 'Three fields the model reads, and what they cost in tokens.',
+                'Left: the three fields of a tool definition, name, description and parameters. Right: a bar chart of prompt size with a Qwen2.5 chat template: 42 tokens with no tool, 212 with one, 283 with two, 498 with five and 838 with ten.',
+                bar='blue')
+    top, ch = 132, 490
+    bh, gp = 112, 24
+    y0 = top + (ch - (3 * bh + 2 * gp)) / 2
+    for i, (k, t, s_) in enumerate((('sand', 'name', 'which function the model is asking for'),
+                                    ('blue', 'description', 'what it does, and when to use it'),
+                                    ('sage', 'parameters', 'the inputs the model has to fill in'))):
+        d.block(24, y0 + i * (bh + gp), 540, bh, k, t, s_, fs=24, subfs=17)
+    rx, rw = 612, 644
+    d.card(rx, top, rw, ch, 'teal')
+    d.t(rx + 32, top + 46, 'Prompt size as tools are added', 24, 800, TEXT, 'start')
+    d.t(rx + 32, top + 74, 'total prompt tokens, for the same request', 16, 400, MUTED, 'start')
+    data = [('no tool', 42), ('1 tool', 212), ('2 tools', 283), ('5 tools', 498), ('10 tools', 838)]
+    bx0, maxw, bhh, gap = rx + 150, 380, 38, 24
+    for i, (lbl, v) in enumerate(data):
+        y = top + 112 + i * (bhh + gap)
+        d.t(bx0 - 16, y + bhh / 2 + 6, lbl, 17, 800, MUTED, 'end')
+        w = max(8, v / 838 * maxw)
+        a = ACC['teal'][0]
+        if i == 0:
+            d.o.append(f'<rect x="{bx0}" y="{y}" width="{w:.1f}" height="{bhh}" rx="10" fill="{BG}" stroke="{a}" stroke-opacity=".7" stroke-width="2.6"/>')
+        else:
+            d.o.append(f'<rect x="{bx0}" y="{y}" width="{w:.1f}" height="{bhh}" rx="10" fill="{a}"/>')
+        d.t(bx0 + w + 14, y + bhh / 2 + 6, f'{v}', 18, 800, TEXT, 'start')
+    d.t(rx + rw / 2, top + ch - 34, 'about 100 tokens once, then about 70 for each tool', 17, 600, MUTED)
+    CAPTIONS['a3/02-tool-definition-is-text'] = 'Measured with the Qwen2.5 chat template. Every tool you offer is read again on every request.'
+    return d.save(A3, '02-tool-definition-is-text', top + ch + 24)
+
+
+def a3_03():
+    d = Diagram('Three ways to get a filled-in form back', 'Same ten abstracts, same instructions, same small model, thinking off.',
+                'Three rows. Hand-written (ask, validate, retry): 10 of 10 valid on the first try and 23 of 30 claims found. LangChain json_schema (schema sent to Ollama as format): 10 of 10 valid and 20 of 30 found. LangChain function_calling (schema offered as a tool): 6 of 10 valid and 8 of 30 found, because in 4 papers the model wrote plain text and LangChain returned None without an error.',
+                bar='teal')
+    top, bh, gp = 132, 118, 22
+    xl, wl = 24, 340
+    xr, wr = 412, 844
+    rows = [('Hand-written', 'ask, validate, retry', '10 of 10 valid on the first try, 23 of 30 claims found',
+             'Pydantic checks every reply, and none needed a retry', 'sage'),
+            ('LangChain json_schema', 'schema sent to Ollama', '10 of 10 valid, 20 of 30 claims found',
+             'Ollama only lets the model write text that fits the schema', 'blue'),
+            ('LangChain function_calling', 'schema offered as a tool', '6 of 10 valid, 8 of 30 claims found',
+             'in 4 papers the model wrote plain text, and LangChain returned None with no error', 'sand')]
+    for i, (lbl, sub, l1, l2, k) in enumerate(rows):
+        y = top + i * (bh + gp)
+        d.block(xl, y, wl, bh, k, lbl, sub, fs=19, subfs=15)
+        d.card(xr, y, wr, bh, k, r=18)
+        d.t(xr + 32, y + bh / 2 - 4, l1, 20, 800, TEXT, 'start')
+        d.t(xr + 32, y + bh / 2 + 26, l2, 16, 400, MUTED, 'start')
+        d.arrow([(xl + wl + 1, y + bh / 2), (xr - 1, y + bh / 2)])
+    bot = top + 3 * bh + 2 * gp
+    CAPTIONS['a3/03-three-ways-to-fill-a-form'] = 'One run each at temperature 0, so a gap of a few claims is within the noise. The silent None is the part to remember.'
+    return d.save(A3, '03-three-ways-to-fill-a-form', bot + 24)
+
+
+def a3_04():
+    d = Diagram('Hidden reasoning is most of the cost', 'The same ten papers through the same tool loop, with thinking left on and then switched off.',
+                'Two bar panels. Time for ten papers: 630 seconds with thinking on and 112 seconds with it off. Tokens written: 29,905 with thinking on and 4,794 with it off. Below: 9 of 10 papers succeeded with thinking on and 10 of 10 with it off, and 18 and 20 of 30 claims were found.',
+                bar='sage')
+    top, ch = 132, 320
+    panels = [(24, 'Time for ten papers', 'seconds', [('thinking on', 630, '630 s'), ('thinking off', 112, '112 s')], 'sand'),
+              (652, 'Tokens written', 'including the hidden ones', [('thinking on', 29905, '29,905'), ('thinking off', 4794, '4,794')], 'teal')]
+    pw = 604
+    for (x, title, sub, bars, k) in panels:
+        d.card(x, top, pw, ch, k)
+        d.t(x + 32, top + 46, title, 24, 800, TEXT, 'start')
+        d.t(x + 32, top + 74, sub, 16, 400, MUTED, 'start')
+        mx = max(v for _, v, _ in bars)
+        bx0, maxw, bhh = x + 170, 330, 44
+        for i, (lbl, v, txt) in enumerate(bars):
+            y = top + 130 + i * (bhh + 44)
+            a = ACC[k][0]
+            d.t(bx0 - 16, y + bhh / 2 + 6, lbl, 17, 800, MUTED, 'end')
+            w = max(10, v / mx * maxw)
+            if i == 0:
+                d.o.append(f'<rect x="{bx0}" y="{y}" width="{w:.1f}" height="{bhh}" rx="12" fill="{a}"/>')
+            else:
+                d.o.append(f'<rect x="{bx0}" y="{y}" width="{w:.1f}" height="{bhh}" rx="12" fill="{BG}" stroke="{a}" stroke-opacity=".7" stroke-width="2.6"/>')
+            d.t(bx0 + w + 14, y + bhh / 2 + 6, txt, 19, 800, TEXT, 'start')
+    yb = top + ch + 44
+    d.t(640, yb, '9 of 10 papers succeeded with thinking on, 10 of 10 with it off.', 19, 800, TEXT)
+    d.t(640, yb + 30, 'Claims found: 18 of 30 with it on, 20 of 30 with it off, which is within the noise of one run each.', 16, 400, MUTED)
+    CAPTIONS['a3/04-hidden-reasoning-cost'] = 'Time follows the tokens the model writes, and the hidden reasoning counts as written tokens.'
+    return d.save(A3, '04-hidden-reasoning-cost', yb + 60)
+
+
 ALL = {'a1_01': a1_01, 'a1_02': a1_02, 'a1_03': a1_03, 'a1_04': a1_04, 'a1_05': a1_05, 'a1_06': a1_06, 'a1_07': a1_07,
-       'a2_01': a2_01, 'a2_02': a2_02, 'a2_03': a2_03}
+       'a2_01': a2_01, 'a2_02': a2_02, 'a2_03': a2_03,
+       'a3_01': a3_01, 'a3_02': a3_02, 'a3_03': a3_03, 'a3_04': a3_04}
 def write_captions():
-    for key, folder in (('a1', A1), ('a2', A2)):
+    for key, folder in (('a1', A1), ('a2', A2), ('a3', A3)):
         rows = sorted((k, v) for k, v in CAPTIONS.items() if k.startswith(key + '/'))
         if rows:
             with open(os.path.join(folder, 'captions.md'), 'w', encoding='utf-8') as f:

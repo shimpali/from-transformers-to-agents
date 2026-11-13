@@ -21,3 +21,7 @@ article-*/images/*.png
 # secrets -- never commit
 .env
 
+
+# downloaded paper text (copyright: never commit)
+.paper_cache/
+.model_cache/
